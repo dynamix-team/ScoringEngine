@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<vulnerabilities>
+  <registry>5|CurrentUser|CypatTest|RegKeyExample|String|Hey</registry>
+  <fileremoval>5|C:\test\hello.txt</fileremoval>
+  <forensic>15|C:\test\answer.txt|4096|cookies|milk</forensic>
+  <user>5|DisableReversableEncryption|Administrator</user>
+  <user>5|Demote|Administrator</user>
+  <customuseralias>5|AddGroup|Administrator|Administrators</customuseralias>
+  <firewall>15|ApplicationException|spotify.exe</firewall>
+  <firewall>19|Enabled</firewall>
+  <fileversion>5|C:\Program Files (x86)\Windows Defender\MsMpLics.dll|4.13.17134.320</fileversion>
+  <passwordpolicy>5|MinimumPasswordLength|0</passwordpolicy>
+</vulnerabilities>
