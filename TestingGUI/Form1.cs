@@ -51,6 +51,13 @@ namespace TestingGUI
 
             Vulnerability.LockAssembly(); //Finalize vulnerabilities from any changes
 
+            NotifyIcon notifyIcon = new NotifyIcon();
+            notifyIcon.Visible = true;
+            notifyIcon.BalloonTipTitle = "Hello";
+            notifyIcon.BalloonTipText = "World";
+            notifyIcon.Icon = System.Drawing.SystemIcons.Application;
+            notifyIcon.ShowBalloonTip(5000, "You Gained Points!", "Check Your Scoring Report", ToolTipIcon.Info);
+
             MouseDown += Form1_MouseDown1;
             Location = new Point(0,0);
             TestTimer.Start();
