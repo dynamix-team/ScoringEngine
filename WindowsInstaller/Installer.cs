@@ -132,6 +132,7 @@ namespace WindowsInstaller
                     if (count >= 50)
                     {
                         phase = 6;
+                        Controls.Remove(UniqueID);
                         count = 0;
                     }
                     break;
