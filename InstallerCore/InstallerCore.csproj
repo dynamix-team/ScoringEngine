@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Engine.Installer.Core</AssemblyName>
+    <RootNamespace>Engine.Installer.Core</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="CheckDefinition.cs~RF146b99bf.TMP" />
+    <None Remove="CheckDefinition.cs~RF147105bf.TMP" />
+    <None Remove="CheckDefinition.cs~RF14750955.TMP" />
+    <None Remove="CheckDefinition.cs~RF147e1272.TMP" />
+    <None Remove="CheckDefinitions.cs~RF1422aa8b.TMP" />
+    <None Remove="CheckTemplate.cs~RF13931ce8.TMP" />
+    <None Remove="CheckTemplate.cs~RF139510f8.TMP" />
+  </ItemGroup>
 
 </Project>
