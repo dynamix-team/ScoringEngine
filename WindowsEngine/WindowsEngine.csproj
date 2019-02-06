@@ -44,5 +44,11 @@
     <Compile Include="Execute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EngineCore\EngineCore.csproj">
+      <Project>{0641b90a-b83b-4c2d-8788-9d9c216e835a}</Project>
+      <Name>EngineCore</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

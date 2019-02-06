@@ -7,6 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+/* TODO:
+ * Call commence
+ * Commence does a backend load with reporting (can use background manager with error reporting, i think thats the safest bet
+ * Meanwhile, do the windows flashy install thing with random quote messages and color changes
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */ 
 
 namespace WindowsInstaller
 {
@@ -132,8 +144,20 @@ namespace WindowsInstaller
                     if (count >= 50)
                     {
                         phase = 6;
+                        WelcomeLabel.Text = "Here we go!";
                         Controls.Remove(UniqueID);
                         count = 0;
+                    }
+                    break;
+                case 6:
+                    count++;
+                    WelcomeLabel.ForeColor = Color.FromArgb(255, (int)FloatLerp(32, 255, (float)count / 50), (int)FloatLerp(32, 255, (float)count / 50), (int)FloatLerp(32, 255, (float)count / 50));
+                    if (count >= 50)
+                    {
+                        phase = 7;
+                        Controls.Remove(UniqueID);
+                        count = 0;
+                        Commence();
                     }
                     break;
             }
@@ -151,6 +175,14 @@ namespace WindowsInstaller
 
             //if id is good, start the installation
             //else, tell em its bad, clear it, and restart the process
+        }
+
+        /// <summary>
+        /// Time to start installing
+        /// </summary>
+        private void Commence()
+        {
+            
         }
 
         private void button1_Click(object sender, EventArgs e)

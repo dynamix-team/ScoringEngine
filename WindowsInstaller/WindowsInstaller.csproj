@@ -86,5 +86,11 @@
   <ItemGroup>
     <Folder Include="Templates\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InstallerCore\InstallerCore.csproj">
+      <Project>{0f000860-8858-406e-93ce-5d130af59b89}</Project>
+      <Name>InstallerCore</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
