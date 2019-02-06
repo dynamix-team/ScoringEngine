@@ -44,5 +44,23 @@ namespace Engine.Installer.Core
             }
             return bytes;
         }
+
+        /// <summary>
+        /// Read a null terminated string from a byte list
+        /// </summary>
+        /// <param name="RawData">The raw data to parse from</param>
+        /// <param name="index">The index of the string. Gets modified to be past the null character</param>
+        /// <returns></returns>
+        public static string ReadString(this List<byte> RawData, ref int index)
+        {
+            string result = "";
+            while(index < RawData.Count && RawData[index] != 0x0)
+            {
+                result += (char)RawData[index];
+                index++;
+            }
+            index++;
+            return result;
+        }
     }
 }

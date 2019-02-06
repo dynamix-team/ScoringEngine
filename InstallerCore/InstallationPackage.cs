@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+//todo Add/Remove Checks
 namespace Engine.Installer.Core
 {
     /// <summary>
     /// A wrapper for an installation package
     /// </summary>
-    public sealed class InstallationPackage
+    public class InstallationPackage
     {
         private const string TargetFileName = "install.bin";
-        private const string FileMagic = "ISE";
+        private const string FileMagic = "SEI";
 
         /// <summary>
         /// Installation flags
@@ -162,6 +162,31 @@ namespace Engine.Installer.Core
         }
 
         /// <summary>
+        /// All check pointers loaded into this installation
+        /// </summary>
+        private ushort[] CheckPointers
+        {
+            get
+            {
+                if (CheckDefsPtr == 0 || NumCheckDefs == 0)
+                {
+                    return new ushort[0];
+                }
+                ushort[] pointers = new ushort[NumCheckDefs];
+                for(int i = 0; i < NumCheckDefs; i++)
+                {
+                    pointers[i] = BitConverter.ToUInt16(RawData.ToArray(), CheckDefsPtr + sizeof(ushort) * i);
+                }
+                return pointers;
+            }
+        }
+
+        /// <summary>
+        /// All checks contained in the installer
+        /// </summary>
+        internal List<CheckDefinition> Checks;
+
+        /// <summary>
         /// An installation configuration
         /// </summary>
         /// <param name="data">The data to parse into an installation package</param>
@@ -170,6 +195,20 @@ namespace Engine.Installer.Core
             RawData = data.ToList();
             if (Encoding.ASCII.GetString(Magic, 0, 3) != FileMagic)
                 throw new FormatException("Installation package is an unrecognized format");
+            try
+            {
+                Checks = new List<CheckDefinition>();
+                foreach(ushort ptr in CheckPointers)
+                {
+                    CheckDefinition c = (RawData, ptr); //Would look so much better in c++ :(. Would be way easier too.
+                    if (c != null)
+                        Checks.Add(c);
+                }
+            }
+            catch
+            {
+                throw new FormatException("Installation package is an unrecognized format");
+            }
         }
 
     }
