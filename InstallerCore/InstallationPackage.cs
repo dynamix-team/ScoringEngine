@@ -21,7 +21,7 @@ namespace Engine.Installer.Core
             /// <summary>
             /// Is this an offline installation (no scoring hook)
             /// </summary>
-            Offline = 0,
+            Offline = 1,
             /// <summary>
             /// Disables image patching (configuration of vulnerabilities to presets)
             /// </summary>
@@ -55,7 +55,7 @@ namespace Engine.Installer.Core
             NumCheckDefs = 0x4,
             CheckDefPtr = 0x6,
             Flags = 0x8,
-            Reserved = 0xA,
+            Reserved = 0xC,
             UniqueID = 0x10,
         }
 

@@ -182,7 +182,11 @@ namespace WindowsInstaller
         /// </summary>
         private void Commence()
         {
-            
+            if(StandaloneInstaller)
+            {
+                byte[] IData = System.IO.File.ReadAllBytes(@"testing\install.bin");
+                Engine.Installer.Core.Installation.LoadInstallationInformation(IData);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)

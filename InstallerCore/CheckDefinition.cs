@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-//todo Add/Remove Arguments
+
 namespace Engine.Installer.Core
 {
     /// <summary>
@@ -14,11 +15,12 @@ namespace Engine.Installer.Core
                 #CheckDef typedef
                 uint16 CheckKey; //The key identifier for a vuln
                 uint16 CheckID; //The identifier of this specific check for online scoring
-                int NumPoints;
+                uint16 NumPoints;
+                byte Flags;
                 byte NumArgs;
+                ushort CheckSize;
+                ushort ArgsPtr;
                 string[NumArgs] Arguments;
-
-            todo: patching data
         */
         private enum CheckDefFields
         {
@@ -156,6 +158,20 @@ namespace Engine.Installer.Core
                 }
                 return args;
             }
+            set
+            {
+                if (ArgsPtr == 0)
+                    return;
+                foreach (string s in Arguments)
+                {
+                    RawData.RemoveRange(ArgsPtr, s.Length + 1);
+                }
+                for(int i = value.Length - 1; i > -1; i--)
+                {
+                    RawData.Insert(ArgsPtr, 0);
+                    RawData.InsertRange(ArgsPtr, Encoding.ASCII.GetBytes(value[i]));
+                }
+            }
         }
 
         /// <summary>
@@ -178,7 +194,7 @@ namespace Engine.Installer.Core
             int fileoffset = IData.Item2;
             try
             {
-                check.RawData.AddRange(Source.GetBytes(fileoffset, 0xA)); //Force feed up to the file size data
+                check.RawData = Source.GetBytes(fileoffset, 0xA).ToList(); //Force feed the 10 byte header
                 check.RawData.AddRange(Source.GetBytes(fileoffset + 0xA, check.CheckSize - 0xA)); //Pipe in the rest, accounting for the 10 bytes we force fed before
                 return check;
             }
@@ -186,6 +202,52 @@ namespace Engine.Installer.Core
             {
             }
             return null;
+        }
+
+        /// <summary>
+        /// Add an argument to the check definition
+        /// </summary>
+        /// <param name="c">The check to add an argument to</param>
+        /// <param name="argument">The argument to add</param>
+        /// <returns></returns>
+        public static CheckDefinition operator +(CheckDefinition c, string argument)
+        {
+            if (c != null)
+                c.AddArgument(argument);
+            return c;
+        }
+
+        public static CheckDefinition operator -(CheckDefinition c, string argument)
+        {
+            if (c != null)
+                c.RemoveArgument(argument);
+            return c;
+        }
+
+        /// <summary>
+        /// Add an argument to the list of args
+        /// </summary>
+        /// <param name="arg"></param>
+        internal void AddArgument(string arg)
+        {
+            if (arg == null)
+                return;
+            List<string> args = new List<string>(Arguments);
+            args.Add(arg);
+            Arguments = args.ToArray();
+        }
+
+        /// <summary>
+        /// Remove an argument from the list of args
+        /// </summary>
+        /// <param name="arg">The argument to remove</param>
+        internal void RemoveArgument(string arg)
+        {
+            if (arg == null)
+                return;
+            List<string> args = new List<string>(Arguments);
+            args.Remove(arg);
+            Arguments = args.ToArray();
         }
     }
 }

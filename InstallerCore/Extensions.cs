@@ -35,7 +35,7 @@ namespace Engine.Installer.Core
         /// <returns></returns>
         public static byte[] GetBytes(this List<byte> RawData, int index, int count)
         {
-            while (index + count >= RawData.Count)
+            while (index + count > RawData.Count)
                 RawData.Add(0x0);
             byte[] bytes = new byte[count];
             for (int i = 0; i < count; i++)
