@@ -14,6 +14,11 @@ namespace Engine.Installer.Core
         private const string FileMagic = "SEI";
 
         /// <summary>
+        /// A dictionary of types to templates, based entirely on filenames
+        /// </summary>
+        public Dictionary<CheckTypes, string> RuntimeTemplates;
+
+        /// <summary>
         /// Installation flags
         /// </summary>
         public enum InstallFlags
@@ -193,6 +198,7 @@ namespace Engine.Installer.Core
         public InstallationPackage(byte[] data)
         {
             RawData = data.ToList();
+            RuntimeTemplates = new Dictionary<CheckTypes, string>();
             if (Encoding.ASCII.GetString(Magic, 0, 3) != FileMagic)
                 throw new FormatException("Installation package is an unrecognized format");
             try
@@ -210,6 +216,5 @@ namespace Engine.Installer.Core
                 throw new FormatException("Installation package is an unrecognized format");
             }
         }
-
     }
 }

@@ -14,6 +14,15 @@
     <None Remove="CheckDefinitions.cs~RF1422aa8b.TMP" />
     <None Remove="CheckTemplate.cs~RF13931ce8.TMP" />
     <None Remove="CheckTemplate.cs~RF139510f8.TMP" />
+    <None Remove="CheckTemplate.cs~RF1a4121cd.TMP" />
+    <None Remove="CheckTypes.cs~RF1a2a654e.TMP" />
+    <None Remove="CSTemplate.cs~RF1ae03b1c.TMP" />
+    <None Remove="CSTemplate.cs~RF1ae0f341.TMP" />
+    <None Remove="CSTemplate.cs~RF1ae4b848.TMP" />
+    <None Remove="CSTemplate.cs~RF1ae6db18.TMP" />
+    <None Remove="TemplateRegistry.cs~RF19aa1901.TMP" />
+    <None Remove="TemplateRegistry.cs~RF1a2fb23d.TMP" />
+    <None Remove="TemplateRegistry.cs~RF1a392493.TMP" />
   </ItemGroup>
 
 </Project>

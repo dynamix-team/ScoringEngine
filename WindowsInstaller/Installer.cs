@@ -186,6 +186,9 @@ namespace WindowsInstaller
             {
                 byte[] IData = System.IO.File.ReadAllBytes(@"testing\install.bin");
                 Engine.Installer.Core.Installation.LoadInstallationInformation(IData);
+                Engine.Installer.Core.Installation.CollectTemplates(@"Templates");
+                //BackgroundWorker bgw = new BackgroundWorker();
+
             }
         }
 

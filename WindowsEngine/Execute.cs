@@ -12,6 +12,19 @@ namespace WindowsEngine
     /// </summary>
     internal static class Execute
     {
-        //#classes
+        /// <summary>
+        /// Tick a frame of the execution timer
+        /// </summary>
+        internal static void Tick()
+        {
+            //#exec
+        }
+
+        #region Templates
+
+            //#templates
+
+        #endregion
+
     }
 }

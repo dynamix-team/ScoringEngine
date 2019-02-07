@@ -9,4 +9,11 @@
     <ProjectReference Include="..\InstallerCore\InstallerCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Templates\" />
+	<Content Include="Templates\**\*.cst">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+  </ItemGroup>
+
 </Project>

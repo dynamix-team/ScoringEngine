@@ -97,9 +97,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CPVulnerabilityFramework\CPVulnerabilityFramework.csproj">
+    <ProjectReference Include="..\CPVulnerabilityFramework\Windows.csproj">
       <Project>{ab64399d-4736-4e7c-8e28-e1b315560fe0}</Project>
-      <Name>CPVulnerabilityFramework</Name>
+      <Name>Windows</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

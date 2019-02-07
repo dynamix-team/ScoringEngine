@@ -96,4 +96,10 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>$(SolutionDir)TemplateTranslation\$(OutDir)TemplateTranslation.exe $(SolutionDir)CPVulnerabilityFramework\Templates\ $(ProjectDir)Templates</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>echo D|xcopy /s /y $(ProjectDir)Templates $(ProjectDir)$(OutDir)Templates</PostBuildEvent>
+  </PropertyGroup>
 </Project>

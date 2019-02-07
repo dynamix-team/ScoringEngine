@@ -6,11 +6,16 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsInstaller", "WindowsInstaller\WindowsInstaller.csproj", "{A5C160E3-AB60-46B7-B00C-892B47652EA9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0F000860-8858-406E-93CE-5D130AF59B89} = {0F000860-8858-406E-93CE-5D130AF59B89}
+		{396D209A-C14E-41E6-9A2E-82D867F52D86} = {396D209A-C14E-41E6-9A2E-82D867F52D86}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingGUI", "TestingGUI\TestingGUI.csproj", "{A05DE8AB-C4B3-4BD4-AEAF-AA28C4D46287}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPVulnerabilityFramework", "CPVulnerabilityFramework\CPVulnerabilityFramework.csproj", "{AB64399D-4736-4E7C-8E28-E1B315560FE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windows", "CPVulnerabilityFramework\Windows.csproj", "{AB64399D-4736-4E7C-8E28-E1B315560FE0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0641B90A-B83B-4C2D-8788-9D9C216E835A} = {0641B90A-B83B-4C2D-8788-9D9C216E835A}
+		{0F000860-8858-406E-93CE-5D130AF59B89} = {0F000860-8858-406E-93CE-5D130AF59B89}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsEngine", "WindowsEngine\WindowsEngine.csproj", "{0E50B61B-880F-452D-A059-DEC50B51CFF1}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -29,19 +34,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{5EC8A91F-7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{26ACF030-06B7-4B8B-97C7-8EB1B3E29048}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy", "Legacy", "{ADB392E9-F005-48A2-B80D-5D921320D010}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Debugging", "Debugging", "{ADB392E9-F005-48A2-B80D-5D921320D010}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EngineCore", "EngineCore\EngineCore.csproj", "{0641B90A-B83B-4C2D-8788-9D9C216E835A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinuxInstaller", "LinuxInstaller\LinuxInstaller.csproj", "{FE27A5C7-BADC-40C5-8324-D320D3EAC1AE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0F000860-8858-406E-93CE-5D130AF59B89} = {0F000860-8858-406E-93CE-5D130AF59B89}
+		{396D209A-C14E-41E6-9A2E-82D867F52D86} = {396D209A-C14E-41E6-9A2E-82D867F52D86}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinuxEngine", "LinuxEngine\LinuxEngine.csproj", "{29783B40-215D-4A0F-975B-79EA34D3281A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0641B90A-B83B-4C2D-8788-9D9C216E835A} = {0641B90A-B83B-4C2D-8788-9D9C216E835A}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateTranslation", "TemplateTranslation\TemplateTranslation.csproj", "{396D209A-C14E-41E6-9A2E-82D867F52D86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +93,10 @@ Global
 		{29783B40-215D-4A0F-975B-79EA34D3281A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29783B40-215D-4A0F-975B-79EA34D3281A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29783B40-215D-4A0F-975B-79EA34D3281A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{396D209A-C14E-41E6-9A2E-82D867F52D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{396D209A-C14E-41E6-9A2E-82D867F52D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{396D209A-C14E-41E6-9A2E-82D867F52D86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{396D209A-C14E-41E6-9A2E-82D867F52D86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
