@@ -9,6 +9,7 @@ namespace Engine.Installer.Core
     /// </summary>
     public enum CheckTypes : ushort
     {
-        ForensicsQuestion = 0,
+        CheckTemplate = 0,
+        ForensicsQuestion = 1,
     }
 }

@@ -30,6 +30,40 @@ namespace WindowsInstaller
         private int count;
         private Image LoadIcon = Properties.Resources.win_load;
 
+        private List<Color> RandomColors = new List<Color>()
+        {
+            Color.FromArgb(255,32,32,32),
+            Color.FromArgb(255,142,0,0),
+            Color.FromArgb(255,35,94,188),
+            Color.FromArgb(255,0,112,26),
+            Color.FromArgb(255,255,143,0),
+            Color.FromArgb(255,86,0,39),
+            Color.FromArgb(255,0,77,64),
+            Color.FromArgb(255,26,35,126),
+            Color.FromArgb(255,183,28,28),
+            Color.FromArgb(255,191,54,12),
+            Color.FromArgb(255,120,0,46),
+        };
+
+        private int colorindex = 0;
+        private Color CurrentColor
+        {
+            get
+            {
+                return RandomColors[colorindex];
+            }
+        }
+
+        private Color NextColor
+        {
+            get
+            {
+                if (colorindex + 1 >= RandomColors.Count)
+                    return RandomColors[0];
+                return RandomColors[colorindex + 1];
+            }
+        }
+
         public Installer()
         {
             InitializeComponent();
@@ -156,8 +190,31 @@ namespace WindowsInstaller
                     {
                         phase = 7;
                         Controls.Remove(UniqueID);
+                        StatusMessage.Visible = false;
                         count = 0;
                         Commence();
+                    }
+                    break;
+                case 7:
+                    count++;
+                    if (count < 50)
+                    {
+                        BackColor = Color.FromArgb(255, (int)FloatLerp(CurrentColor.R, NextColor.R, (float)count / 50), (int)FloatLerp(CurrentColor.G, NextColor.G, (float)count / 50), (int)FloatLerp(CurrentColor.B, NextColor.B, (float)count / 50));
+                    }
+                    else
+                    {
+                        phase = 8;
+                    }
+                    break;
+                case 8:
+                    count++;
+                    if (count >= 250)
+                    {
+                        count = 0;
+                        colorindex++;
+                        if (colorindex >= RandomColors.Count)
+                            colorindex = 0;
+                        phase = 7;
                     }
                     break;
             }

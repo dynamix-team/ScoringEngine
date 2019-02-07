@@ -87,6 +87,7 @@
             // StatusMessage
             // 
             this.StatusMessage.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.StatusMessage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.StatusMessage.Font = new System.Drawing.Font("Segoe UI Semilight", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StatusMessage.ForeColor = System.Drawing.Color.LightCoral;
             this.StatusMessage.Location = new System.Drawing.Point(0, 479);

@@ -6,6 +6,10 @@
     <RootNamespace>Engine.Installer.Core</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="CheckDefinition.cs~RF146b99bf.TMP" />
     <None Remove="CheckDefinition.cs~RF147105bf.TMP" />
