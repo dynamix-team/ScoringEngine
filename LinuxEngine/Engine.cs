@@ -1,4 +1,7 @@
 ﻿//?installer.online
+#if DEBUG
+//#define ONLINE
+#endif
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,18 +34,13 @@ namespace WindowsEngine
 
         protected override async Task Tick()
         {
-            //?installer.tick
-#if DEBUG
-            await DebugTick();
-#endif
-        }
 
 #if DEBUG
-        private async Task DebugTick()
-        {
-            
-        }
+            //?debug.tick
+#else
+            //?installer.tick
 #endif
+        }
 
 #if ONLINE
         protected override bool IsOnline()
@@ -54,6 +52,12 @@ namespace WindowsEngine
         {
             return false;
         }
+#endif
+
+#if DEBUG
+        //?debug.classes
+#else
+        //?installer.classes
 #endif
     }
 }
