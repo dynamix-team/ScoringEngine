@@ -176,7 +176,7 @@ internal abstract class CheckTemplate
 
 internal sealed class SafeString
 {
-    private static byte[] __key__ = new byte[] { 0x00, 0xc5, 0x6c, 0xdd, 0x38, 0x8d, 0xa7, 0x02, 0x43, 0x92, 0x96, 0xae, 0x31, 0x99, 0x8f, 0x79 };
+    private static readonly byte[] __key__ = new byte[] { 0x00, 0xc5, 0x6c, 0xdd, 0x38, 0x8d, 0xa7, 0x02, 0x43, 0x92, 0x96, 0xae, 0x31, 0x99, 0x8f, 0x79 };
 
     private byte[] data;
 
@@ -195,8 +195,10 @@ internal sealed class SafeString
     /// <param name="s"></param>
     public static implicit operator SafeString(string s)
     {
-        SafeString st = new SafeString();
-        st.data = E(s);
+        SafeString st = new SafeString
+        {
+            data = E(s)
+        };
         return st;
     }
 

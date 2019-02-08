@@ -25,11 +25,24 @@ namespace WindowsEngine
             //?installer.init
         }
 
-        protected override Task Tick()
+#if DEBUG
+
+#endif
+
+        protected override async Task Tick()
         {
             //?installer.tick
-            return base.Tick();
+#if DEBUG
+            await DebugTick();
+#endif
         }
+
+#if DEBUG
+        private async Task DebugTick()
+        {
+            
+        }
+#endif
 
 #if ONLINE
         protected override bool IsOnline()
