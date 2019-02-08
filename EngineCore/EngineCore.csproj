@@ -4,4 +4,34 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Engine.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="EngineFrame.cs~RF1fc1d964.TMP" />
+    <None Remove="EngineFrame.cs~RF1fdc0d18.TMP" />
+    <None Remove="EngineFrame.cs~RF1fdee87b.TMP" />
+    <None Remove="EngineFrame.cs~RF1fe2dfdc.TMP" />
+    <None Remove="EngineFrame.cs~RF1fe3cccc.TMP" />
+    <None Remove="EngineFrame.cs~RF1fe8b1e9.TMP" />
+    <None Remove="Extensions.cs~RF206e76e8.TMP" />
+    <None Remove="Extensions.cs~RF20732257.TMP" />
+    <None Remove="Networking.cs~RF20252d01.TMP" />
+    <None Remove="Networking.cs~RF2027317c.TMP" />
+    <None Remove="Scoring.cs~RF1f908392.TMP" />
+    <None Remove="Scoring.cs~RF1f9265cf.TMP" />
+    <None Remove="Scoring.cs~RF1f95b5e5.TMP" />
+    <None Remove="Scoring.cs~RF1fc23909.TMP" />
+    <None Remove="Scoring.cs~RF1fc31148.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Engine.cs" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="copy /y $(ProjectDir)Engine.cs $(SolutionDir)LinuxEngine\Engine.cs&#xD;&#xA;copy /y $(ProjectDir)Engine.cs $(SolutionDir)WindowsEngine\Engine.cs" />
+  </Target>
+
 </Project>

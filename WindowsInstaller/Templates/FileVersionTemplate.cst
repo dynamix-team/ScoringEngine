@@ -1,0 +1,40 @@
+//cst
+//?using System;
+//?using System.Collections.Generic;
+//?using System.Diagnostics;
+//?using System.IO;
+//?using System.Linq;
+//?using System.Text;
+//?using System.Threading.Tasks;
+namespace CPVulnerabilityFramework.Templates
+{
+internal sealed class FileVersionTemplate : CheckTemplate
+{
+private readonly SafeString FilePath;
+private readonly SafeString Version;
+/// <summary>
+/// A file version check template
+/// </summary>
+/// <param name="args">[0:FilePath],[1:FileVersion]</param>
+internal FileVersionTemplate(params string[] args)
+{
+if (args.Length < 2)
+Enabled = false;
+FilePath = args[0];
+Version = args[1];
+}
+/// <summary>
+/// Get the check value
+/// </summary>
+/// <returns></returns>
+internal override async Task<uint> GetCheckValue()
+{
+if (!File.Exists(FilePath))
+{
+return PrepareState("");
+}
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath)));
+return version;
+}
+}
+}
