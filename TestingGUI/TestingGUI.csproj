@@ -101,6 +101,14 @@
       <Project>{ab64399d-4736-4e7c-8e28-e1b315560fe0}</Project>
       <Name>Windows</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EngineCore\EngineCore.csproj">
+      <Project>{0641b90a-b83b-4c2d-8788-9d9c216e835a}</Project>
+      <Name>EngineCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsEngine\WindowsEngine.csproj">
+      <Project>{0e50b61b-880f-452d-a059-dec50b51cff1}</Project>
+      <Name>WindowsEngine</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon %281%29.ico" />

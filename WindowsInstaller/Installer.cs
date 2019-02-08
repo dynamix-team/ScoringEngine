@@ -178,7 +178,7 @@ namespace WindowsInstaller
                     if (count >= 50)
                     {
                         phase = 6;
-                        WelcomeLabel.Text = "Here we go!";
+                        WelcomeLabel.Text = "Starting Installation...";
                         Controls.Remove(UniqueID);
                         count = 0;
                     }

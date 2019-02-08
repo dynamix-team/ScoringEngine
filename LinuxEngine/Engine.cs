@@ -10,9 +10,17 @@ namespace WindowsEngine
     /// <summary>
     /// Auto generated class by the installer [DO NOT EDIT]
     /// </summary>
+#if DEBUG
+    public class Engine : EngineFrame
+#else
     internal class Engine : EngineFrame
+#endif
     {
+#if DEBUG
+        public Engine()
+#else
         internal Engine()
+#endif
         {
             //?installer.init
         }

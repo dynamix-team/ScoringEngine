@@ -29,6 +29,7 @@ namespace Engine.Core
                 return; //throw new InvalidOperationException("An engine is already running. Cannot start a new engine in this instance.");
             Engine = engine;
             scoring_thread = new Thread(new ThreadStart(Score));
+            scoring_thread.IsBackground = true;
             scoring_thread.Start();
         }
 
