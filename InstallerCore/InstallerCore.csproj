@@ -31,4 +31,8 @@
     <None Remove="TemplateRegistry.cs~RF1a392493.TMP" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="copy /y $(ProjectDir)CheckTemplate.cs $(SolutionDir)CPVulnerabilityFramework\Templates" />
+  </Target>
+
 </Project>

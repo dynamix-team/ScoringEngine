@@ -139,29 +139,19 @@ internal abstract class CheckTemplate
     /// <returns>A UINT version of the state</returns>
     internal uint PrepareState(object o_state)
     {
-        switch(o_state)
+        if (o_state == null)
+            return 0u;
+
+        try
         {
-            case int state:
-                return (uint)state;
-            case uint state:
-                return state;
-            case short state:
-                return (uint)state;
-            case ushort state:
-                return (uint)state;
-            case byte state:
-                return (uint)state;
-            case sbyte state:
-                return (uint)state;
-            case bool state:
-                return state ? 1u : 0u; //WHY CANT I CAST A BOOL... TO A UINT??? TF???
-            case string state:
-                return PrepareString(state);
-            case null:
-                return 0u;
-            default:
+            return (uint)o_state;
+        }
+        catch
+        {
+            if (o_state.ToString() != null)
+                return PrepareString(o_state.ToString());
 #if DEBUG
-                throw new InvalidOperationException("Tried to prepare a state of an undefined type");
+            throw new InvalidOperationException("Tried to prepare a state of an undefined type");
 #else
                 return 0;
 #endif
