@@ -1,12 +1,14 @@
-﻿//?installer.online
-#if DEBUG
-//#define ONLINE
+﻿#if DEBUG
+//?debug.online
+#else
+//?installer.online
 #endif
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Engine.Core;
+//?installer.includes
 
 namespace WindowsEngine
 {
@@ -19,6 +21,9 @@ namespace WindowsEngine
     internal class Engine : EngineFrame
 #endif
     {
+
+        //?installer.fields
+
 #if DEBUG
         public Engine()
 #else
@@ -28,18 +33,9 @@ namespace WindowsEngine
             //?installer.init
         }
 
-#if DEBUG
-
-#endif
-
         protected override async Task Tick()
         {
-
-#if DEBUG
-            //?debug.tick
-#else
             //?installer.tick
-#endif
         }
 
 #if ONLINE
@@ -54,10 +50,6 @@ namespace WindowsEngine
         }
 #endif
 
-#if DEBUG
-        //?debug.classes
-#else
         //?installer.classes
-#endif
     }
 }

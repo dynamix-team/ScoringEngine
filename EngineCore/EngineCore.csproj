@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="copy /y $(ProjectDir)Engine.cs $(SolutionDir)LinuxEngine\Engine.cs&#xD;&#xA;copy /y $(ProjectDir)Engine.cs $(SolutionDir)WindowsEngine\Engine.cs" />
+    <Exec Command="copy /y $(ProjectDir)Engine.cs $(SolutionDir)LinuxEngine\Engine.cs&#xD;&#xA;copy /y $(ProjectDir)Engine.cs $(SolutionDir)WindowsEngine\Engine.cs&#xD;&#xA;copy /y $(ProjectDir)Engine.cs $(SolutionDir)TemplateTranslation\Engine.cs" />
   </Target>
 
 </Project>

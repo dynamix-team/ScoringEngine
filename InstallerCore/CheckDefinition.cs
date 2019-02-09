@@ -33,6 +33,11 @@ namespace Engine.Installer.Core
             ArgsPtr = 0xA
         }
 
+        private CheckDefinition()
+        {
+            RawData.AddRange(new byte[0x10]);
+        }
+
         private List<byte> RawData = new List<byte>();
 
         /// <summary>
@@ -106,7 +111,7 @@ namespace Engine.Installer.Core
                     RawData.Add(0x0);
                 return RawData[(int)CheckDefFields.NumArgs];
             }
-            set
+            private set
             {
                 while (RawData.Count <= (int)CheckDefFields.NumArgs)
                     RawData.Add(0x0);
@@ -166,11 +171,14 @@ namespace Engine.Installer.Core
                 {
                     RawData.RemoveRange(ArgsPtr, s.Length + 1);
                 }
-                for(int i = value.Length - 1; i > -1; i--)
+                NumArgs = (byte)value.Length;
+
+                for (int i = value.Length - 1; i > -1; i--)
                 {
                     RawData.Insert(ArgsPtr, 0);
                     RawData.InsertRange(ArgsPtr, Encoding.ASCII.GetBytes(value[i]));
                 }
+
             }
         }
 
@@ -249,5 +257,30 @@ namespace Engine.Installer.Core
             args.Remove(arg);
             Arguments = args.ToArray();
         }
+
+#if DEBUG
+        /// <summary>
+        /// Create a debug check. Only exists in a debug build
+        /// </summary>
+        /// <param name="type">Type of check to implement</param>
+        /// <param name="ID">The ID of the check</param>
+        /// <param name="Points">The amount of points</param>
+        /// <param name="Flags">The flags of the check (can be 0)</param>
+        /// <param name="args">Aruments to pass to the check</param>
+        /// <returns></returns>
+        public static CheckDefinition DebugCheck(CheckTypes type, ushort ID, short Points, byte Flags, params string[] args)
+        {
+            CheckDefinition c = new CheckDefinition();
+            c.CheckKey = (ushort)type;
+            c.CheckID = ID;
+            c.NumPoints = Points;
+            c.Flags = Flags;
+            c.CheckSize = 0;
+            c.ArgsPtr = (ushort)c.RawData.Count; //super weird bug, this overwrites the arg ptr if the byte array is smaller before it adds the bytes.
+            c.Arguments = args;
+            c.CheckSize = (ushort)c.RawData.Count;
+            return c;
+        }
+#endif
     }
 }

@@ -12,49 +12,49 @@ namespace TemplateTranslation
         static void Main(string[] args)
         {
             
-            if (args.Length > 1 && System.IO.Directory.Exists(args[0]) && System.IO.Directory.Exists(args[1]))
+            if (args.Length > 2)
             {
-                string inputdir = args[0];
-                string outputdir = args[1];
-                DirectoryInfo TemplateDir = new DirectoryInfo(inputdir);
-                foreach (FileInfo template in TemplateDir.GetFiles("*template.cs", SearchOption.AllDirectories))
+                if(args[0].ToLower().Contains("/t") && System.IO.Directory.Exists(args[1]) && System.IO.Directory.Exists(args[2]))
                 {
-                    string outfile = Path.Combine(outputdir, template.Name.Replace(".cs", ".cst"));
-                    try
+                    string inputdir = args[1];
+                    string outputdir = args[2];
+                    DirectoryInfo TemplateDir = new DirectoryInfo(inputdir);
+                    foreach (FileInfo template in TemplateDir.GetFiles("*template.cs", SearchOption.AllDirectories))
                     {
-                        if (File.Exists(outfile))
+                        string outfile = Path.Combine(outputdir, template.Name.Replace(".cs", ".cst"));
+                        try
                         {
-                            File.Delete(outfile);
+                            if (File.Exists(outfile))
+                            {
+                                File.Delete(outfile);
+                            }
+                            File.WriteAllText(outfile, Engine.Installer.Core.Templates.Translator.MakeCST(File.ReadAllText(template.FullName)));
                         }
-                        File.WriteAllText(outfile, TemplateConversion(File.ReadAllText(template.FullName)));
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Failed to import: " + template.FullName);
+                        catch
+                        {
+                            Console.WriteLine("Failed to import: " + template.FullName);
+                        }
                     }
                 }
+                else if(args[0].ToLower().Contains("/d"))
+                {
+                    try
+                    {
+                        File.WriteAllText(args[1], Engine.Installer.Core.Templates.Translator.BuildDebuggingEngine(File.ReadAllText(args[1]), args[2], Engine.Installer.Core.Templates.Translator.ParseDebuggingChecklist(File.ReadAllText(args[3])), false));
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine(e.StackTrace.ToString());
+                        Console.WriteLine(e.Message);
+                        Environment.Exit(2);
+                    }
+                }
+                
             }
             else
             {
-                Console.WriteLine("Invalid file path "  + args[0]);
+                Environment.Exit(1);
             }
-        }
-
-        static string TemplateConversion(string contents)
-        {
-            string result = "//cst\r\n";
-            contents = contents.Replace(";", ";\r\n"); //Fix any inlining so we can get accurate using defs
-            string[] lines = contents.Split('\n', '\r');
-            
-            foreach(string s in lines)
-            {
-                if (s.Trim().Length < 1)
-                    continue;
-                if (s.Trim().Length > 6 && s.Trim().Substring(0, 5) == "using")
-                    result += "//?";
-                result += s.Trim() + "\r\n";
-            }
-            return result;
         }
     }
 }

@@ -6,8 +6,6 @@
 //?using System.Linq;
 //?using System.Text;
 //?using System.Threading.Tasks;
-namespace CPVulnerabilityFramework.Templates
-{
 internal sealed class FileVersionTemplate : CheckTemplate
 {
 private readonly SafeString FilePath;
@@ -35,6 +33,5 @@ return PrepareState("");
 }
 var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath)));
 return version;
-}
 }
 }
