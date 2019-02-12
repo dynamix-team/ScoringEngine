@@ -33,18 +33,6 @@ namespace Engine.Installer.Core
             ArgsPtr = 0xA
         }
 
-        /// <summary>
-        /// Flags for a check definition
-        /// </summary>
-        [Flags]
-        public enum CheckDefFlags
-        {
-            /// <summary>
-            /// Returns a string id instead of a proper uint (because we werent clever enough to think of anything else)
-            /// </summary>
-            StringReturn = 1,
-        }
-
         private CheckDefinition()
         {
             RawData.AddRange(new byte[0x10]);
