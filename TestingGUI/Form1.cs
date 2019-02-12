@@ -58,5 +58,23 @@ namespace TestingGUI
         {
             Application.Exit();
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            textBox2.Text = PrepareString(textBox1.Text).ToString("X");
+        }
+
+        private uint PrepareString(string content) //PJW hash
+        {
+            uint hash = 0, high;
+            foreach (char s in content)
+            {
+                hash = (hash << 4) + (uint)s;
+                if ((high = hash & 0xF0000000) > 0)
+                    hash ^= high >> 24;
+                hash &= ~high;
+            }
+            return hash;
+        }
     }
 }

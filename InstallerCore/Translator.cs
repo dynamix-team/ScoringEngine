@@ -161,15 +161,15 @@ namespace Engine.Installer.Core.Templates
                     {
                         args += "@\"" + arguments[i] + "\"" + (i == arguments.Length - 1 ? "" : ", ");
                     }
-                    check.Declarator = "c_" + count + " = new " + check.ClassName + "(" + args + ");";
+                    check.Declarator = "c_" + count + " = new " + check.ClassName + "(" + args + "){ Flags = (byte)" + check.Definition.Flags + " };";
                     check.InstanceName = "c_" + count;
                     check.StateName = check.InstanceName + "_s";
                     check.Header = "private " + check.ClassName + " c_" + count + ";\n\rprivate uint " + check.StateName + ";";
                     
                     engine_fields += check.Header + "\r\n";
                     engine_init += check.Declarator + "\r\n";
-                    engine_tick += check.StateName + " = await " + check.InstanceName + ".GetCheckValue();\r\n";
-                    engine_tick += "RegisterCheck(" + check.Definition.CheckID + "," + check.StateName + ");\n\r";
+                    engine_tick += "if(" + check.InstanceName + "?.Enabled ?? false){ " + check.StateName + " = await " + check.InstanceName + ".GetCheckValue(); ";
+                    engine_tick += "RegisterCheck((ushort)" + check.Definition.CheckID + "|((uint)" + check.InstanceName + ".Flags << 16)," + check.StateName + ");}\n\r";
                 }
                 count++;
             }

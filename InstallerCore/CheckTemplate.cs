@@ -50,6 +50,7 @@ internal abstract class CheckTemplate
     /// Used to lock the state check to only allow one async state to run
     /// </summary>
     private bool STATE_LOCK;
+    internal ushort Flags;
     #endregion
     //Specifications (since i literally cant think rn)
 
@@ -148,6 +149,19 @@ internal abstract class CheckTemplate
     /// Is this check enabled for evaluation?
     /// </summary>
     internal bool Enabled = true;
+
+    /// <summary>
+    /// Flags for a check definition
+    /// </summary>
+    [Flags]
+    internal enum CheckFlags
+    {
+    }
+
+    private bool HasFlag(CheckFlags flag)
+    {
+        return (Flags & (byte)flag) > 0;
+    }
 }
 
 internal sealed class SafeString

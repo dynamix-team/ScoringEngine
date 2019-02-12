@@ -22,6 +22,7 @@ namespace Engine.Installer.Core
         /// <summary>
         /// Installation flags
         /// </summary>
+        [Flags]
         public enum InstallFlags : uint
         {
             /// <summary>
