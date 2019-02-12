@@ -52,6 +52,21 @@ namespace Engine.Core
                 }
                 else
                 {
+#if DEBUG
+                    try
+                    {
+                        string result = "";
+                        foreach(var statepair in Batch)
+                        {
+                            result += statepair.Item1.ToString("X") + " => " + statepair.Item2.ToString("X") + "\r\n";
+                        }
+                        System.IO.File.WriteAllText("Debugging.txt", result);
+                    }
+                    catch
+                    {
+
+                    }
+#endif
                     //else send batch to scoring utilities
                 }
 

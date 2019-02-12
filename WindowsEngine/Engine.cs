@@ -31,21 +31,29 @@ namespace WindowsEngine
     {
 
         private FileVersionTemplate__0 c_0;
-private uint c_0_s;
+
+private uint c_0_s;
 private FileVersionTemplate__1 c_1;
-private uint c_1_s;
+
+private uint c_1_s;
 private FileVersionTemplate__2 c_2;
-private uint c_2_s;
+
+private uint c_2_s;
 private FileVersionTemplate__3 c_3;
-private uint c_3_s;
+
+private uint c_3_s;
 private FileVersionTemplate__4 c_4;
-private uint c_4_s;
+
+private uint c_4_s;
 private FileVersionTemplate__5 c_5;
-private uint c_5_s;
+
+private uint c_5_s;
 private FileVersionTemplate__6 c_6;
-private uint c_6_s;
+
+private uint c_6_s;
 private FileVersionTemplate__7 c_7;
-private uint c_7_s;
+
+private uint c_7_s;
 
 
 #if DEBUG
@@ -67,23 +75,23 @@ c_7 = new FileVersionTemplate__7(@"C:\Test\vmplayer.exe", @"15.0.0.38213");
 
         protected override async Task Tick()
         {
-            c_0_s = await c_0.GetCheckValue();
-RegisterCheck(1,c_0_s);
-c_1_s = await c_1.GetCheckValue();
-RegisterCheck(2,c_1_s);
-c_2_s = await c_2.GetCheckValue();
-RegisterCheck(3,c_2_s);
-c_3_s = await c_3.GetCheckValue();
-RegisterCheck(4,c_3_s);
-c_4_s = await c_4.GetCheckValue();
-RegisterCheck(5,c_4_s);
-c_5_s = await c_5.GetCheckValue();
-RegisterCheck(6,c_5_s);
-c_6_s = await c_6.GetCheckValue();
-RegisterCheck(7,c_6_s);
-c_7_s = await c_7.GetCheckValue();
-RegisterCheck(8,c_7_s);
-
+            if(c_0?.Enabled ?? false){ c_0_s = await c_0.GetCheckValue(); RegisterCheck((ushort)1|((uint)1<< 16),c_0_s);}
+
+if(c_1?.Enabled ?? false){ c_1_s = await c_1.GetCheckValue(); RegisterCheck((ushort)2|((uint)1<< 16),c_1_s);}
+
+if(c_2?.Enabled ?? false){ c_2_s = await c_2.GetCheckValue(); RegisterCheck((ushort)3|((uint)1<< 16),c_2_s);}
+
+if(c_3?.Enabled ?? false){ c_3_s = await c_3.GetCheckValue(); RegisterCheck((ushort)4|((uint)1<< 16),c_3_s);}
+
+if(c_4?.Enabled ?? false){ c_4_s = await c_4.GetCheckValue(); RegisterCheck((ushort)5|((uint)1<< 16),c_4_s);}
+
+if(c_5?.Enabled ?? false){ c_5_s = await c_5.GetCheckValue(); RegisterCheck((ushort)6|((uint)1<< 16),c_5_s);}
+
+if(c_6?.Enabled ?? false){ c_6_s = await c_6.GetCheckValue(); RegisterCheck((ushort)7|((uint)1<< 16),c_6_s);}
+
+if(c_7?.Enabled ?? false){ c_7_s = await c_7.GetCheckValue(); RegisterCheck((ushort)8|((uint)1<< 16),c_7_s);}
+
+
         }
 
 #if ONLINE
@@ -102,7 +110,6 @@ RegisterCheck(8,c_7_s);
 internal sealed class FileVersionTemplate__0 : CheckTemplate
 {
 private readonly SafeString FilePath;
-private readonly SafeString Version;
 /// <summary>
 /// A file version check template
 /// </summary>
@@ -112,7 +119,6 @@ internal FileVersionTemplate__0(params string[] args)
 if (args.Length < 2)
 Enabled = false;
 FilePath = args[0];
-Version = args[1];
 }
 /// <summary>
 /// Get the check value
@@ -124,7 +130,7 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath)));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion));
 return version;
 }
 }
@@ -133,7 +139,6 @@ return version;
 internal sealed class FileVersionTemplate__1 : CheckTemplate
 {
 private readonly SafeString FilePath;
-private readonly SafeString Version;
 /// <summary>
 /// A file version check template
 /// </summary>
@@ -143,7 +148,6 @@ internal FileVersionTemplate__1(params string[] args)
 if (args.Length < 2)
 Enabled = false;
 FilePath = args[0];
-Version = args[1];
 }
 /// <summary>
 /// Get the check value
@@ -155,7 +159,7 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath)));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion));
 return version;
 }
 }
@@ -164,7 +168,6 @@ return version;
 internal sealed class FileVersionTemplate__2 : CheckTemplate
 {
 private readonly SafeString FilePath;
-private readonly SafeString Version;
 /// <summary>
 /// A file version check template
 /// </summary>
@@ -174,7 +177,6 @@ internal FileVersionTemplate__2(params string[] args)
 if (args.Length < 2)
 Enabled = false;
 FilePath = args[0];
-Version = args[1];
 }
 /// <summary>
 /// Get the check value
@@ -186,7 +188,7 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath)));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion));
 return version;
 }
 }
@@ -195,7 +197,6 @@ return version;
 internal sealed class FileVersionTemplate__3 : CheckTemplate
 {
 private readonly SafeString FilePath;
-private readonly SafeString Version;
 /// <summary>
 /// A file version check template
 /// </summary>
@@ -205,7 +206,6 @@ internal FileVersionTemplate__3(params string[] args)
 if (args.Length < 2)
 Enabled = false;
 FilePath = args[0];
-Version = args[1];
 }
 /// <summary>
 /// Get the check value
@@ -217,7 +217,7 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath)));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion));
 return version;
 }
 }
@@ -226,7 +226,6 @@ return version;
 internal sealed class FileVersionTemplate__4 : CheckTemplate
 {
 private readonly SafeString FilePath;
-private readonly SafeString Version;
 /// <summary>
 /// A file version check template
 /// </summary>
@@ -236,7 +235,6 @@ internal FileVersionTemplate__4(params string[] args)
 if (args.Length < 2)
 Enabled = false;
 FilePath = args[0];
-Version = args[1];
 }
 /// <summary>
 /// Get the check value
@@ -248,7 +246,7 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath)));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion));
 return version;
 }
 }
@@ -257,7 +255,6 @@ return version;
 internal sealed class FileVersionTemplate__5 : CheckTemplate
 {
 private readonly SafeString FilePath;
-private readonly SafeString Version;
 /// <summary>
 /// A file version check template
 /// </summary>
@@ -267,7 +264,6 @@ internal FileVersionTemplate__5(params string[] args)
 if (args.Length < 2)
 Enabled = false;
 FilePath = args[0];
-Version = args[1];
 }
 /// <summary>
 /// Get the check value
@@ -279,7 +275,7 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath)));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion));
 return version;
 }
 }
@@ -288,7 +284,6 @@ return version;
 internal sealed class FileVersionTemplate__6 : CheckTemplate
 {
 private readonly SafeString FilePath;
-private readonly SafeString Version;
 /// <summary>
 /// A file version check template
 /// </summary>
@@ -298,7 +293,6 @@ internal FileVersionTemplate__6(params string[] args)
 if (args.Length < 2)
 Enabled = false;
 FilePath = args[0];
-Version = args[1];
 }
 /// <summary>
 /// Get the check value
@@ -310,7 +304,7 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath)));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion));
 return version;
 }
 }
@@ -319,7 +313,6 @@ return version;
 internal sealed class FileVersionTemplate__7 : CheckTemplate
 {
 private readonly SafeString FilePath;
-private readonly SafeString Version;
 /// <summary>
 /// A file version check template
 /// </summary>
@@ -329,7 +322,6 @@ internal FileVersionTemplate__7(params string[] args)
 if (args.Length < 2)
 Enabled = false;
 FilePath = args[0];
-Version = args[1];
 }
 /// <summary>
 /// Get the check value
@@ -341,7 +333,7 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath)));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion));
 return version;
 }
 }

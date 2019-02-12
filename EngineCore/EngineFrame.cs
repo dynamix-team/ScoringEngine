@@ -56,6 +56,7 @@ namespace Engine.Core
                 {
                     Batch[i] = (0xFFFFFFFF, 0); //to catch key not found exception which should be impossible unless someone manually modifies the memory
                 }
+                QUEUE.RemoveAt(0);
             }
             return Batch;
         }
@@ -72,9 +73,6 @@ namespace Engine.Core
         /// <summary>
         /// Collect the states of all of the checks on the system
         /// </summary>
-        internal protected virtual async System.Threading.Tasks.Task Tick()
-        {
-            await System.Threading.Tasks.Task.Delay(1);
-        }
+        internal protected abstract System.Threading.Tasks.Task Tick();
     }
 }

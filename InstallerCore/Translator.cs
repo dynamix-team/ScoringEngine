@@ -168,8 +168,8 @@ namespace Engine.Installer.Core.Templates
                     
                     engine_fields += check.Header + "\r\n";
                     engine_init += check.Declarator + "\r\n";
-                    engine_tick += check.StateName + " = await " + check.InstanceName + ".GetCheckValue();\r\n";
-                    engine_tick += "RegisterCheck(" + check.Definition.CheckID + "," + check.StateName + ");\n\r";
+                    engine_tick += "if(" + check.InstanceName + "?.Enabled ?? false){ " + check.StateName + " = await " + check.InstanceName + ".GetCheckValue(); ";
+                    engine_tick += "RegisterCheck((ushort)" + check.Definition.CheckID + "|((uint)" + check.Definition.Flags + "<< 16)," + check.StateName + ");}\n\r";
                 }
                 count++;
             }
