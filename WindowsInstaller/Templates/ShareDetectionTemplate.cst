@@ -1,0 +1,35 @@
+//cst
+//?using System.Management;
+//?using System.Threading.Tasks;
+class ShareDetectionTemplate : CheckTemplate
+{
+private readonly ManagementClass Shares;
+private readonly SafeString ShareName;
+internal override async Task<uint> GetCheckValue()
+{
+uint value = 0;
+try
+{
+foreach (ManagementObject Share in Shares.GetInstances())
+{
+value ^= PrepareState(Share["Name"].ToString());
+}
+value = await Task.FromResult<uint>(value);
+}
+catch
+{
+Enabled = false;
+}
+return value;
+}
+internal ShareDetectionTemplate(params string[] args)
+{
+if (args.Length < 1)
+{
+Enabled = false;
+return;
+}
+ShareName = args[0];
+Shares = new ManagementClass(@"\\Localhost", "Win32_Share", new ObjectGetOptions());
+}
+}
