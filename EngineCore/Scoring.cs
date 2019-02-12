@@ -40,14 +40,20 @@ namespace Engine.Core
         /// </summary>
         private static async void Score()
         {
-            while(Engine.EngineRunning())
+            while(Engine?.EngineRunning() ?? false)
             {
                 await Engine.Tick();
 
                 (uint,uint)[] Batch = Engine.GetBatch(Networking.BatchSize);
 
-                //TODO: if engine.IsOnline() Send batch to networking layer
-                //else send batch to scoring utilities
+                if(Engine.IsOnline())
+                {
+                    await Networking.SendStates(Batch);
+                }
+                else
+                {
+                    //else send batch to scoring utilities
+                }
 
                 await Task.Delay(EngineTickDelay);
             }

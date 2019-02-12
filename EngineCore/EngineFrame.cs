@@ -64,7 +64,7 @@ namespace Engine.Core
         /// Is the engine an online engine
         /// </summary>
         /// <returns></returns>
-        protected virtual bool IsOnline()
+        public virtual bool IsOnline()
         {
             return true;
         }

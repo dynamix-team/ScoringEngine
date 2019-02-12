@@ -10,16 +10,45 @@ namespace Engine.Installer.Core
     /// </summary>
     public static class Installation
     {
-        private const string WinEnginePath = @"C:\Scoring";
-        private const string LinEnginePath = @"/Scoring";
-        public const string InstallPath = @"Installation";
-        public const string EnginesrtPath = @"Engine";
+        private const string WinEnginePath =    @"C:\Scoring";
+        private const string LinEnginePath =    @"/Scoring";
+        public const string InstallPath =       @"Installation";
+        public const string EnginesrcPath =     @"Engine";
+        private const string RepoName =         @"ScoringEngine-master";
+        private const string CoreName =         @"InstallerCore";
+        private const string TemplateFilename = @"CheckTemplate.cs";
+        private const string MSBuildInstaller = @"ms_build.exe";
+        private const string MSBuildURL =       @"";
 
         public static string EnginePath
         {
             get
             {
                 return (CurrentInstallation?.HasFlag(InstallationPackage.InstallFlags.Linux) ?? false) ? LinEnginePath : WinEnginePath;
+            }
+        }
+
+        public static string SourcePath
+        {
+            get
+            {
+                return Path.Combine(EnginePath, InstallPath, EnginesrcPath);
+            }
+        }
+
+        public static string RepoPath
+        {
+            get
+            {
+                return Path.Combine(SourcePath, RepoName);
+            }
+        }
+
+        public static string CheckTemplatePath
+        {
+            get
+            {
+                return Path.Combine(RepoPath, CoreName, TemplateFilename);
             }
         }
 
@@ -76,7 +105,7 @@ namespace Engine.Installer.Core
         /// <summary>
         /// Begin the installation
         /// </summary>
-        public static async System.Threading.Tasks.Task Install()
+        public static async System.Threading.Tasks.Task<InstallationResult> Install()
         {
             //Step 0. Pre-Setup
 #if DEBUG
@@ -85,10 +114,75 @@ namespace Engine.Installer.Core
 #endif
 
             //Step 1. Get the engine source
-            await Networking.DownloadEngine(Path.Combine(EnginePath, InstallPath, EnginesrtPath));
+            bool GotEngine = await Networking.DownloadEngine(SourcePath);
 
-            //Step 2. 
+            if(!GotEngine)
+            {
+                return new InstallationResult() { Message = "Failed to download the engine source. Please verify that you are connected to the internet and have access to github.com", ErrorLevel = -1 };
+            }
 
+            //Step 2. Patch the engine encryption key
+            PatchCheckKey();
+            return InstallationResult.Success;
+            //Step 3. Download the c# compiler for the respective platform
+            //ms_build for windows
+            bool GotCompiler = await Networking.DownloadResource(MSBuildURL, InstallPath, MSBuildInstaller);
+
+            if(!GotCompiler)
+            {
+                return new InstallationResult() { Message = "Failed to download a critical resource. Please verify that you are connected to the internet.", ErrorLevel = -1 };
+            }
+
+            return InstallationResult.Success;
+        }
+
+        private static void PatchCheckKey()
+        {
+            //*?installer.key*/
+            try
+            {
+                string text = File.ReadAllText(CheckTemplatePath);
+                byte[] newkey = new byte[16];
+                new Random((int)DateTime.Now.Ticks).NextBytes(newkey);
+                string keytext = "{";
+                for(int i = 0; i < 16; i++)
+                {
+                    keytext += newkey[i] + (i == 15 ? "," : "};//");
+                }
+                text = text.Replace("/*?installer.key*/", keytext);
+                File.WriteAllText(CheckTemplatePath, text);
+            }
+            catch
+            {
+                //Report as a fatal error. this is a security compromise and cannot be waivered.
+            }
+        }
+
+        /// <summary>
+        /// The result of an installation procedure
+        /// </summary>
+        public sealed class InstallationResult
+        {
+            /// <summary>
+            /// The error level for the installation
+            /// </summary>
+            public int ErrorLevel = 0;
+
+            /// <summary>
+            /// The message of the installation
+            /// </summary>
+            public string Message = "An unknown error occurred in the installation";
+
+            /// <summary>
+            /// The installation finished successfully
+            /// </summary>
+            public static InstallationResult Success
+            {
+                get
+                {
+                    return new InstallationResult() { Message = "The installation completed successfully" };
+                }
+            }
         }
     }
 }

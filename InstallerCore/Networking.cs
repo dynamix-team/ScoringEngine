@@ -32,7 +32,7 @@ namespace Engine.Installer.Core
         /// </summary>
         /// <param name="path">The path to download the engine to</param>
         /// <returns></returns>
-        internal static async Task DownloadEngine(string path)
+        internal static async Task<bool> DownloadEngine(string path)
         {
             try
             {
@@ -46,22 +46,46 @@ namespace Engine.Installer.Core
             catch
             {
                 //todo: kill windows explorer when we start the installer
+                return false;
             }
             try
             {
-                byte[] FileData;
-                using (var client = new System.Net.Http.HttpClient())
-                {
-                    FileData = await client.GetByteArrayAsync(ProjectURL);
-                }
-                File.WriteAllBytes(Path.Combine(path, ZipName), FileData);
-
+                bool result = await DownloadResource(ProjectURL, path, ZipName);
+                if (!result)
+                    return false;
                 ZipFile.ExtractToDirectory(Path.Combine(path, ZipName), path);
             }
             catch
             {
                 //report an error to the installer, this is CRITICAL
+                return false;
             }
+            return true;
+        }
+
+        /// <summary>
+        /// Download an internet resource
+        /// </summary>
+        /// <param name="URL">The url to try to access</param>
+        /// <param name="outdir">The directory to write the file to</param>
+        /// <param name="outname">The name of the file to write</param>
+        /// <returns>The result of the operation</returns>
+        internal static async Task<bool> DownloadResource(string URL, string outdir, string outname)
+        {
+            try
+            {
+                byte[] FileData;
+                using (var client = new System.Net.Http.HttpClient())
+                {
+                    FileData = await client.GetByteArrayAsync(URL);
+                }
+                File.WriteAllBytes(Path.Combine(outdir, outname), FileData);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
     }
