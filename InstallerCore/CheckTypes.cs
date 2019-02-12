@@ -21,5 +21,6 @@ namespace Engine.Installer.Core
         FileVersionTemplate = 1,
         RegTemplate = 2,
         ServiceTemplate = 3,
+        FileCheckTemplate = 4,
     }
 }

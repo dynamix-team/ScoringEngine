@@ -1,0 +1,61 @@
+//cst
+//?using System;
+//?using System.Collections.Generic;
+//?using System.IO;
+//?using System.Linq;
+//?using System.Text;
+//?using System.Threading.Tasks;
+class FileCheckTemplate : CheckTemplate
+{
+private readonly SafeString Location;
+private enum CheckType
+{
+exists,
+notexists,
+}
+private readonly CheckType Check;
+internal async override Task<uint> GetCheckValue()
+{
+uint value = 0;
+try
+{
+switch(Check)
+{
+case CheckType.exists:
+value = await Task.FromResult<uint>(PrepareState(File.Exists(Location)));
+return value;
+case CheckType.notexists:
+value = await Task.FromResult<uint>(PrepareState(!File.Exists(Location)));
+return value;
+}
+return 0u;
+}
+catch
+{
+Enabled = false;
+return 0u;
+}
+}
+/// <summary>
+///
+/// </summary>
+/// <param name="args">args[0] Location, args[1] status of file</param>
+internal FileCheckTemplate(params string[] args)
+{
+if (args.Length < 2)
+{
+Enabled = false;
+return;
+}
+Location = args[0];
+try
+{
+Enum.TryParse(args[1], true, out CheckType checkType);
+Check = checkType;
+}
+catch
+{
+Enabled = false;
+}
+}
+}
