@@ -147,7 +147,7 @@ namespace Engine.Installer.Core
                 string keytext = "{";
                 for(int i = 0; i < 16; i++)
                 {
-                    keytext += newkey[i] + (i == 15 ? "," : "};//");
+                    keytext += newkey[i] + (i != 15 ? "," : "};//");
                 }
                 text = text.Replace("/*?installer.key*/", keytext);
                 File.WriteAllText(CheckTemplatePath, text);
