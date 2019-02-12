@@ -40,6 +40,10 @@ namespace Engine.Installer.Core
             /// Is this a linux installation
             /// </summary>
             Linux = 4,
+            /// <summary>
+            /// Is this a ranked competition
+            /// </summary>
+            Ranked = 8,
         }
 
         private List<byte> RawData;

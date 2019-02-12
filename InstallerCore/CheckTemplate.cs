@@ -141,21 +141,7 @@ internal abstract class CheckTemplate
     {
         if (o_state == null)
             return 0u;
-
-        try
-        {
-            return (uint)o_state;
-        }
-        catch
-        {
-            if (o_state.ToString() != null)
-                return PrepareString(o_state.ToString());
-#if DEBUG
-            throw new InvalidOperationException("Tried to prepare a state of an undefined type");
-#else
-                return 0;
-#endif
-        }
+        return PrepareString(o_state.ToString());
     }
 
     /// <summary>
