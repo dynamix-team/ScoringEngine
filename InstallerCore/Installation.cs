@@ -18,7 +18,7 @@ namespace Engine.Installer.Core
         private const string CoreName =         @"InstallerCore";
         private const string TemplateFilename = @"CheckTemplate.cs";
         private const string MSBuildInstaller = @"ms_build.exe";
-        private const string MSBuildURL =       @"";
+        private const string MSBuildURL =       @"http://www.shiversoft.net/";
 
         public static string EnginePath
         {
