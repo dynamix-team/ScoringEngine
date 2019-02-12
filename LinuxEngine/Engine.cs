@@ -39,12 +39,12 @@ namespace WindowsEngine
         }
 
 #if ONLINE
-        protected override bool IsOnline()
+        public override bool IsOnline()
         {
             return true;
         }
 #else
-        protected override bool IsOnline()
+        public override bool IsOnline()
         {
             return false;
         }

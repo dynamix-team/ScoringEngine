@@ -19,5 +19,6 @@ namespace Engine.Installer.Core
     {
         CheckTemplate = 0,
         FileVersionTemplate = 1,
+        RegTemplate = 2,
     }
 }

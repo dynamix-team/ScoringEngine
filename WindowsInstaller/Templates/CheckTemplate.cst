@@ -126,20 +126,7 @@ internal uint PrepareState(object o_state)
 {
 if (o_state == null)
 return 0u;
-try
-{
-return (uint)o_state;
-}
-catch
-{
-if (o_state.ToString() != null)
 return PrepareString(o_state.ToString());
-#if DEBUG
-throw new InvalidOperationException("Tried to prepare a state of an undefined type");
-#else
-return 0;
-#endif
-}
 }
 /// <summary>
 /// Is this check enabled for evaluation?
@@ -148,7 +135,7 @@ internal bool Enabled = true;
 }
 internal sealed class SafeString
 {
-private static readonly byte[] __key__ = new byte[] { 0x00, 0xc5, 0x6c, 0xdd, 0x38, 0x8d, 0xa7, 0x02, 0x43, 0x92, 0x96, 0xae, 0x31, 0x99, 0x8f, 0x79 };
+private static readonly byte[] __key__ = new byte[] /*?installer.key*/{ 0x00, 0xc5, 0x6c, 0xdd, 0x38, 0x8d, 0xa7, 0x02, 0x43, 0x92, 0x96, 0xae, 0x31, 0x99, 0x8f, 0x79 };
 private byte[] data;
 /// <summary>
 /// Create a string from a safe string
