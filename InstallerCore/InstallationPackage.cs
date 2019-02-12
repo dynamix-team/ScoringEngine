@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//todo Add/Remove Checks
+using System.Xml;
+
 namespace Engine.Installer.Core
 {
     /// <summary>
@@ -21,7 +22,7 @@ namespace Engine.Installer.Core
         /// <summary>
         /// Installation flags
         /// </summary>
-        public enum InstallFlags
+        public enum InstallFlags : uint
         {
             /// <summary>
             /// Is this an offline installation (no scoring hook)
@@ -32,16 +33,16 @@ namespace Engine.Installer.Core
             /// </summary>
             NoPatch = 2,
             /// <summary>
-            /// Does this installation use the Dynamix Online Subsystem
+            /// Is this a debug package? (Offline & NoPatch)
             /// </summary>
-            OnlineSubsystemDynamix = 4,
+            Debug = 3,
             /// <summary>
-            /// Does this installation use the Artitus Online Subsystem
+            /// Is this a linux installation
             /// </summary>
-            OnlineSubsystemArtitus = 8,
+            Linux = 4,
         }
 
-        internal List<byte> RawData;
+        private List<byte> RawData;
 
         /* Temp cause idk where to put this while designing
 
@@ -184,12 +185,55 @@ namespace Engine.Installer.Core
                 }
                 return pointers;
             }
+            set
+            {
+                for(int i = 0; i < value.Length; i++)
+                {
+                    RawData.SetBytes(CheckDefsPtr + i * sizeof(ushort), BitConverter.GetBytes(value[i]));
+                }
+            }
         }
 
         /// <summary>
         /// All checks contained in the installer
         /// </summary>
-        internal List<CheckDefinition> Checks;
+        internal CheckDefinition[] Checks
+        {
+            get
+            {
+                CheckDefinition[] checks = new CheckDefinition[CheckPointers.Length];
+                for(int i = 0; i < checks.Length; i++)
+                {
+                    checks[i] = (RawData, CheckPointers[i]);
+                }
+                return checks;
+            }
+            set
+            {
+                CheckDefinition[] checks = Checks;
+                ushort[] checkptrs = CheckPointers;
+                for (int i = checks.Length - 1; i > -1; i--)
+                {
+                    RawData.RemoveRange(checkptrs[i], checks[i].CheckSize);
+                }
+                for(int i = 0; i < checkptrs.Length; i++)
+                {
+                    RawData.RemoveRange(CheckDefsPtr, 2);
+                }
+                for(int i = 0; i < value.Length; i++)
+                {
+                    RawData.InsertRange(CheckDefsPtr, new byte[2]);
+                }
+                checkptrs = new ushort[value.Length];
+                for (int i = 0; i < value.Length; i++)
+                {
+                    checkptrs[i] = (ushort)RawData.Count;
+                    RawData.AddRange((byte[])value[i]);
+                }
+                CheckPointers = checkptrs;
+                NumCheckDefs = (ushort)checkptrs.Length;
+            }
+        }
 
         /// <summary>
         /// An installation configuration
@@ -201,20 +245,79 @@ namespace Engine.Installer.Core
             RuntimeTemplates = new Dictionary<CheckTypes, string>();
             if (Encoding.ASCII.GetString(Magic, 0, 3) != FileMagic)
                 throw new FormatException("Installation package is an unrecognized format");
+        }
+
+        /// <summary>
+        /// Get the raw byte data of an installation package
+        /// </summary>
+        /// <param name="p">the package to get data from</param>
+        public static implicit operator byte[](InstallationPackage p)
+        {
+            return p.RawData.ToArray();
+        }
+
+        private InstallationPackage()
+        {
+
+        }
+#if DEBUG
+        /// <summary>
+        /// Create a debug installation package using an xml input
+        /// </summary>
+        /// <returns></returns>
+        public static InstallationPackage MakeDebugInstall(string XMLInput)
+        {
             try
             {
-                Checks = new List<CheckDefinition>();
-                foreach(ushort ptr in CheckPointers)
+                InstallationPackage package = new InstallationPackage();
+                List<CheckDefinition> checks = new List<CheckDefinition>();
+                package.RawData = new List<byte>();
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(XMLInput);
+                package.RawData.AddRange(new byte[32]);
+                package.Flags |= (uint)InstallFlags.Debug;
+                package.Magic = Encoding.ASCII.GetBytes(FileMagic);
+
+                foreach (XmlNode node in doc.GetElementsByTagName("check"))
                 {
-                    CheckDefinition c = (RawData, ptr); //Would look so much better in c++ :(. Would be way easier too.
-                    if (c != null)
-                        Checks.Add(c);
+                    try
+                    {
+                        Enum.TryParse(node["key"].InnerText, true, out CheckTypes checktype);
+                        string[] args = new string[node["arguments"].ChildNodes.Count];
+                        for (int i = 0; i < args.Length; i++)
+                        {
+                            args[i] = node["arguments"].ChildNodes[i].InnerText;
+                        }
+                        CheckDefinition d = CheckDefinition.DebugCheck(checktype, Convert.ToUInt16(node["id"].InnerText), Convert.ToInt16(node["points"].InnerText), Convert.ToByte(node["flags"].InnerText), args);
+                        if (d != null)
+                            checks.Add(d);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.StackTrace.ToString());
+                        Console.WriteLine(e.Message);
+                    }
                 }
+                package.CheckDefsPtr = (ushort)package.RawData.Count;
+                package.Checks = checks.ToArray();
+                return package;
             }
-            catch
+            catch (Exception e)
             {
-                throw new FormatException("Installation package is an unrecognized format");
+                Console.WriteLine(e.StackTrace.ToString());
+                Console.WriteLine(e.Message);
+                return null;
             }
+        }
+#endif
+        /// <summary>
+        /// Does this installation have the specified flag
+        /// </summary>
+        /// <param name="flag">The flag to check</param>
+        /// <returns></returns>
+        public bool HasFlag(InstallFlags flag)
+        {
+            return (Flags & (uint)flag) > 0;
         }
     }
 }

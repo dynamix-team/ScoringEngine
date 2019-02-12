@@ -29,6 +29,7 @@ namespace WindowsInstaller
         private byte phase;
         private int count;
         private Image LoadIcon = Properties.Resources.win_load;
+        BackgroundWorker InstallerWorker;
 
         private List<Color> RandomColors = new List<Color>()
         {
@@ -67,6 +68,10 @@ namespace WindowsInstaller
         public Installer()
         {
             InitializeComponent();
+#if DEBUG
+            Debug();
+#endif
+            InstallerWorker = new BackgroundWorker();
             UniqueID.Location = new Point(0, (int)(this.Height * .6));
             StatusMessage.Location = new Point(0, UniqueID.Location.Y + 67);
             UniqueID.TextChanged += UniqueID_TextChanged;
@@ -244,8 +249,7 @@ namespace WindowsInstaller
                 byte[] IData = System.IO.File.ReadAllBytes(@"testing\install.bin");
                 Engine.Installer.Core.Installation.LoadInstallationInformation(IData);
                 Engine.Installer.Core.Installation.CollectTemplates(@"Templates");
-                //BackgroundWorker bgw = new BackgroundWorker();
-
+                Engine.Installer.Core.Installation.Install();
             }
         }
 
@@ -269,5 +273,14 @@ namespace WindowsInstaller
         private void UniqueID_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
         {
         }
+#if DEBUG
+        /// <summary>
+        /// A function to test debug anything
+        /// </summary>
+        private void Debug()
+        {
+            Engine.Installer.Core.InstallationPackage.MakeDebugInstall(System.IO.File.ReadAllText(@"F:\CyberPatriot\ScoringEngine\ScoringEngine\CPVulnerabilityFramework\debugchecks.xml"));
+        }
+#endif
     }
 }

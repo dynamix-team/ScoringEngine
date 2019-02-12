@@ -10,6 +10,19 @@ namespace Engine.Installer.Core
     /// </summary>
     public static class Installation
     {
+        private const string WinEnginePath = @"C:\Scoring";
+        private const string LinEnginePath = @"/Scoring";
+        public const string InstallPath = @"Installation";
+        public const string EnginesrtPath = @"Engine";
+
+        public static string EnginePath
+        {
+            get
+            {
+                return (CurrentInstallation?.HasFlag(InstallationPackage.InstallFlags.Linux) ?? false) ? LinEnginePath : WinEnginePath;
+            }
+        }
+
         /// <summary>
         /// The current installation data
         /// </summary>
@@ -28,7 +41,7 @@ namespace Engine.Installer.Core
         /// Collect the templates from the current installation
         /// <paramref name="templatesdirectory">The directory to load templates from</paramref>
         /// </summary>
-        public static void CollectTemplates(string templatesdirectory)
+        public static void CollectTemplates(string templatesdirectory) //Potentially obsolete because of the build process
         {
             if (CurrentInstallation == null)
                 return;
@@ -63,8 +76,18 @@ namespace Engine.Installer.Core
         /// <summary>
         /// Begin the installation
         /// </summary>
-        public static void Install()
+        public static async System.Threading.Tasks.Task Install()
         {
+            //Step 0. Pre-Setup
+#if DEBUG
+#else
+            try { foreach (var process in System.Diagnostics.Process.GetProcessesByName("explorer")) process.Kill(); } catch { } //Kill windows explorer so installation ops are un-interrupted
+#endif
+
+            //Step 1. Get the engine source
+            await Networking.DownloadEngine(Path.Combine(EnginePath, InstallPath, EnginesrtPath));
+
+            //Step 2. 
 
         }
     }

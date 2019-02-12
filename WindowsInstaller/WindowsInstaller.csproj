@@ -97,8 +97,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>$(SolutionDir)TemplateTranslation\$(OutDir)TemplateTranslation.exe /i $(SolutionDir)CPVulnerabilityFramework\debugchecks.xml $(ProjectDir)Testing\install.bin</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>echo D|xcopy /s /y $(ProjectDir)Templates $(ProjectDir)$(OutDir)Templates</PostBuildEvent>

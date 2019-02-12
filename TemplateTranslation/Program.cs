@@ -36,7 +36,8 @@ namespace TemplateTranslation
                         }
                     }
                 }
-                else if(args[0].ToLower().Contains("/d"))
+#if DEBUG
+                else if(args[0].ToLower().Contains("/e"))
                 {
                     try
                     {
@@ -49,7 +50,22 @@ namespace TemplateTranslation
                         Environment.Exit(2);
                     }
                 }
-                
+                else if(args[0].ToLower().Contains("/i"))
+                {
+                    try
+                    {
+                        //1: in xml
+                        //2: out filename
+                        File.WriteAllBytes(args[2], Engine.Installer.Core.InstallationPackage.MakeDebugInstall(File.ReadAllText(args[1])));
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.StackTrace.ToString());
+                        Console.WriteLine(e.Message);
+                        Environment.Exit(2);
+                    }
+                }
+#endif
             }
             else
             {
