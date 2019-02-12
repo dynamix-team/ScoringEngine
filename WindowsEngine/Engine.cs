@@ -31,29 +31,21 @@ namespace WindowsEngine
     {
 
         private FileVersionTemplate__0 c_0;
-
-private uint c_0_s;
+private uint c_0_s;
 private FileVersionTemplate__1 c_1;
-
-private uint c_1_s;
+private uint c_1_s;
 private FileVersionTemplate__2 c_2;
-
-private uint c_2_s;
+private uint c_2_s;
 private FileVersionTemplate__3 c_3;
-
-private uint c_3_s;
+private uint c_3_s;
 private FileVersionTemplate__4 c_4;
-
-private uint c_4_s;
+private uint c_4_s;
 private FileVersionTemplate__5 c_5;
-
-private uint c_5_s;
+private uint c_5_s;
 private FileVersionTemplate__6 c_6;
-
-private uint c_6_s;
+private uint c_6_s;
 private FileVersionTemplate__7 c_7;
-
-private uint c_7_s;
+private uint c_7_s;
 
 
 #if DEBUG
@@ -77,38 +69,30 @@ c_7 = new FileVersionTemplate__7(@"C:\Test\vmplayer.exe", @"15.0.0.38213");
         {
             c_0_s = await c_0.GetCheckValue();
 RegisterCheck(1,c_0_s);
-
-c_1_s = await c_1.GetCheckValue();
+c_1_s = await c_1.GetCheckValue();
 RegisterCheck(2,c_1_s);
-
-c_2_s = await c_2.GetCheckValue();
+c_2_s = await c_2.GetCheckValue();
 RegisterCheck(3,c_2_s);
-
-c_3_s = await c_3.GetCheckValue();
+c_3_s = await c_3.GetCheckValue();
 RegisterCheck(4,c_3_s);
-
-c_4_s = await c_4.GetCheckValue();
+c_4_s = await c_4.GetCheckValue();
 RegisterCheck(5,c_4_s);
-
-c_5_s = await c_5.GetCheckValue();
+c_5_s = await c_5.GetCheckValue();
 RegisterCheck(6,c_5_s);
-
-c_6_s = await c_6.GetCheckValue();
+c_6_s = await c_6.GetCheckValue();
 RegisterCheck(7,c_6_s);
-
-c_7_s = await c_7.GetCheckValue();
+c_7_s = await c_7.GetCheckValue();
 RegisterCheck(8,c_7_s);
-
-
+
         }
 
 #if ONLINE
-        protected override bool IsOnline()
+        public override bool IsOnline()
         {
             return true;
         }
 #else
-        protected override bool IsOnline()
+        public override bool IsOnline()
         {
             return false;
         }
@@ -484,20 +468,7 @@ internal uint PrepareState(object o_state)
 {
 if (o_state == null)
 return 0u;
-try
-{
-return (uint)o_state;
-}
-catch
-{
-if (o_state.ToString() != null)
 return PrepareString(o_state.ToString());
-#if DEBUG
-throw new InvalidOperationException("Tried to prepare a state of an undefined type");
-#else
-return 0;
-#endif
-}
 }
 /// <summary>
 /// Is this check enabled for evaluation?
@@ -506,7 +477,7 @@ internal bool Enabled = true;
 }
 internal sealed class SafeString
 {
-private static readonly byte[] __key__ = new byte[] { 0x00, 0xc5, 0x6c, 0xdd, 0x38, 0x8d, 0xa7, 0x02, 0x43, 0x92, 0x96, 0xae, 0x31, 0x99, 0x8f, 0x79 };
+private static readonly byte[] __key__ = new byte[] /*?installer.key*/{ 0x00, 0xc5, 0x6c, 0xdd, 0x38, 0x8d, 0xa7, 0x02, 0x43, 0x92, 0x96, 0xae, 0x31, 0x99, 0x8f, 0x79 };
 private byte[] data;
 /// <summary>
 /// Create a string from a safe string
