@@ -23,5 +23,6 @@ namespace Engine.Installer.Core
         ServiceTemplate = 3,
         FileCheckTemplate = 4,
         FirewallTemplate = 5,
+        ShareDetectionTemplate = 6,
     }
 }
