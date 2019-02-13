@@ -99,7 +99,7 @@ namespace Engine.Installer.Core.Templates
                     {
                         args[i] = node["arguments"].ChildNodes[i].InnerText;
                     }
-                    CheckDefinition d = CheckDefinition.DebugCheck(checktype, Convert.ToUInt16(node["id"].InnerText), Convert.ToInt16(node["points"].InnerText), Convert.ToByte(node["flags"].InnerText), args);
+                    CheckDefinition d = CheckDefinition.DebugCheck(checktype, Convert.ToUInt16(node["id"].InnerText), Convert.ToInt16(node["points"].InnerText), Convert.ToByte(node["flags"].InnerText), uint.Parse(node["answer"].InnerText, System.Globalization.NumberStyles.HexNumber), args);
                     if (d != null)
                         checks.Add(d);
                 }
