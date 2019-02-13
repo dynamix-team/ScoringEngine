@@ -24,5 +24,6 @@ namespace Engine.Installer.Core
         FileCheckTemplate = 4,
         FirewallTemplate = 5,
         ShareDetectionTemplate = 6,
+        OptionalFeaturesTemplate = 7,
     }
 }
