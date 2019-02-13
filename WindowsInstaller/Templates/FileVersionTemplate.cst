@@ -9,6 +9,7 @@
 internal sealed class FileVersionTemplate : CheckTemplate
 {
 private readonly SafeString FilePath;
+private readonly SafeString TargetVersion;
 /// <summary>
 /// A file version check template
 /// </summary>
@@ -18,6 +19,7 @@ internal FileVersionTemplate(params string[] args)
 if (args.Length < 2)
 Enabled = false;
 FilePath = args[0];
+TargetVersion = args[1];
 }
 /// <summary>
 /// Get the check value
@@ -29,7 +31,7 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) > 0));
 return version;
 }
 }
