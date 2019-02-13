@@ -31,21 +31,29 @@ namespace WindowsEngine
     {
 
         private FileVersionTemplate__0 c_0;
-private uint c_0_s;
+
+private uint c_0_s;
 private FileVersionTemplate__1 c_1;
-private uint c_1_s;
+
+private uint c_1_s;
 private FileVersionTemplate__2 c_2;
-private uint c_2_s;
+
+private uint c_2_s;
 private FileVersionTemplate__3 c_3;
-private uint c_3_s;
+
+private uint c_3_s;
 private FileVersionTemplate__4 c_4;
-private uint c_4_s;
+
+private uint c_4_s;
 private FileVersionTemplate__5 c_5;
-private uint c_5_s;
+
+private uint c_5_s;
 private FileVersionTemplate__6 c_6;
-private uint c_6_s;
+
+private uint c_6_s;
 private FileVersionTemplate__7 c_7;
-private uint c_7_s;
+
+private uint c_7_s;
 
 
 #if DEBUG
@@ -68,14 +76,22 @@ c_7 = new FileVersionTemplate__7(@"C:\Test\vmplayer.exe", @"15.0.0.38213"){ Flag
         protected override async Task Tick()
         {
             if(c_0?.Enabled ?? false){ c_0_s = await c_0.GetCheckValue(); RegisterCheck((ushort)1|((uint)c_0.Flags << 16),c_0_s);}
-if(c_1?.Enabled ?? false){ c_1_s = await c_1.GetCheckValue(); RegisterCheck((ushort)2|((uint)c_1.Flags << 16),c_1_s);}
-if(c_2?.Enabled ?? false){ c_2_s = await c_2.GetCheckValue(); RegisterCheck((ushort)3|((uint)c_2.Flags << 16),c_2_s);}
-if(c_3?.Enabled ?? false){ c_3_s = await c_3.GetCheckValue(); RegisterCheck((ushort)4|((uint)c_3.Flags << 16),c_3_s);}
-if(c_4?.Enabled ?? false){ c_4_s = await c_4.GetCheckValue(); RegisterCheck((ushort)5|((uint)c_4.Flags << 16),c_4_s);}
-if(c_5?.Enabled ?? false){ c_5_s = await c_5.GetCheckValue(); RegisterCheck((ushort)6|((uint)c_5.Flags << 16),c_5_s);}
-if(c_6?.Enabled ?? false){ c_6_s = await c_6.GetCheckValue(); RegisterCheck((ushort)7|((uint)c_6.Flags << 16),c_6_s);}
-if(c_7?.Enabled ?? false){ c_7_s = await c_7.GetCheckValue(); RegisterCheck((ushort)8|((uint)c_7.Flags << 16),c_7_s);}
-
+
+if(c_1?.Enabled ?? false){ c_1_s = await c_1.GetCheckValue(); RegisterCheck((ushort)2|((uint)c_1.Flags << 16),c_1_s);}
+
+if(c_2?.Enabled ?? false){ c_2_s = await c_2.GetCheckValue(); RegisterCheck((ushort)3|((uint)c_2.Flags << 16),c_2_s);}
+
+if(c_3?.Enabled ?? false){ c_3_s = await c_3.GetCheckValue(); RegisterCheck((ushort)4|((uint)c_3.Flags << 16),c_3_s);}
+
+if(c_4?.Enabled ?? false){ c_4_s = await c_4.GetCheckValue(); RegisterCheck((ushort)5|((uint)c_4.Flags << 16),c_4_s);}
+
+if(c_5?.Enabled ?? false){ c_5_s = await c_5.GetCheckValue(); RegisterCheck((ushort)6|((uint)c_5.Flags << 16),c_5_s);}
+
+if(c_6?.Enabled ?? false){ c_6_s = await c_6.GetCheckValue(); RegisterCheck((ushort)7|((uint)c_6.Flags << 16),c_6_s);}
+
+if(c_7?.Enabled ?? false){ c_7_s = await c_7.GetCheckValue(); RegisterCheck((ushort)8|((uint)c_7.Flags << 16),c_7_s);}
+
+
         }
 
 #if ONLINE
