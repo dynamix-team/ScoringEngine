@@ -161,7 +161,7 @@ namespace Engine.Installer.Core.Templates
                     {
                         args += "@\"" + arguments[i] + "\"" + (i == arguments.Length - 1 ? "" : ", ");
                     }
-                    check.Declarator = "c_" + count + " = new " + check.ClassName + "(" + args + "){ Flags = (byte)" + check.Definition.Flags + " };";
+                    check.Declarator = "c_" + count + " = new " + check.ClassName + "(" + args + "){ Flags = (byte)" + check.Definition.Flags + " }; Expect((uint)" + check.Definition.CheckKey + "," + "(uint)" + check.Definition.OfflineAnswer + ");";
                     check.InstanceName = "c_" + count;
                     check.StateName = check.InstanceName + "_s";
                     check.Header = "private " + check.ClassName + " c_" + count + ";\n\rprivate uint " + check.StateName + ";";

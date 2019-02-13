@@ -41,7 +41,7 @@ private uint c_0_s;
         internal Engine()
 #endif
         {
-            c_0 = new FileVersionTemplate__0(@"C:\Test\vmplayer.exe", @"15.0.0 build-10134415"){ Flags = (byte)0 };
+            c_0 = new FileVersionTemplate__0(@"C:\Test\vmplayer.exe", @"15.0.0 build-10134415"){ Flags = (byte)0 }; Expect((uint)1,(uint)375221);
 
         }
 

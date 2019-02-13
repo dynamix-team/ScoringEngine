@@ -23,6 +23,9 @@
     <None Remove="Extensions.cs~RF20732257.TMP" />
     <None Remove="Networking.cs~RF20252d01.TMP" />
     <None Remove="Networking.cs~RF2027317c.TMP" />
+    <None Remove="OfflineScoring.cs~RF3b431657.TMP" />
+    <None Remove="OfflineScoring.cs~RF3b437782.TMP" />
+    <None Remove="OfflineScoring.cs~RF3b4a8c30.TMP" />
     <None Remove="Scoring.cs~RF1f908392.TMP" />
     <None Remove="Scoring.cs~RF1f9265cf.TMP" />
     <None Remove="Scoring.cs~RF1f95b5e5.TMP" />

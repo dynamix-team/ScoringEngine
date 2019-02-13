@@ -295,6 +295,7 @@ namespace Engine.Installer.Core
             c.ArgsPtr = (ushort)c.RawData.Count; //super weird bug, this overwrites the arg ptr if the byte array is smaller before it adds the bytes.
             c.Arguments = args;
             c.CheckSize = (ushort)c.RawData.Count;
+            c.OfflineAnswer = OfflineAnswer;
             return c;
         }
 #endif

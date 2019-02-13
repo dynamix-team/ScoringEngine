@@ -6,18 +6,13 @@ using System.Xml;
 
 /*  TODO
     Patching Structures
-    
-
-
-
-
-
-
-
-
-
-
-
+    #typedef CheckPatch
+    ushort PatchSize; //size of the patch
+    ushort PatchKey; //key of the check we are patching (so we know which check template to use)
+    byte PatchFlags; //any flags for the patch
+    byte NumArgs; //How many args does the patch have
+    ushort Padding; //Padding to even out the struct size
+    string[] Args;
 */
 namespace Engine.Installer.Core
 {
