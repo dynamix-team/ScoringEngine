@@ -18,6 +18,7 @@ namespace Engine.Installer.Core
                 uint16 NumPoints;
                 byte Flags;
                 byte NumArgs;
+                uint OfflineAnswer; //If this is an offline image, the answer to the check (PJW hashed)
                 ushort CheckSize;
                 ushort ArgsPtr;
                 string[NumArgs] Arguments;
@@ -29,8 +30,9 @@ namespace Engine.Installer.Core
             NumPoints = 0x4,
             Flags = 0x6,
             NumArgs = 0x7,
-            CheckSize = 0x8,
-            ArgsPtr = 0xA
+            OfflineAnswer = 0x8,
+            CheckSize = 0xC,
+            ArgsPtr = 0xE
         }
 
         private CheckDefinition()
@@ -119,6 +121,20 @@ namespace Engine.Installer.Core
             }
         }
         /// <summary>
+        /// The offline answer for this check (only valid if installation is offline or debug)
+        /// </summary>
+        public uint OfflineAnswer
+        {
+            get
+            {
+                return BitConverter.ToUInt32(RawData.GetBytes((int)CheckDefFields.OfflineAnswer, sizeof(uint)), 0);
+            }
+            set
+            {
+                RawData.SetBytes((int)CheckDefFields.OfflineAnswer, BitConverter.GetBytes(value));
+            }
+        }
+        /// <summary>
         /// The size of the raw check data
         /// </summary>
         public ushort CheckSize
@@ -195,15 +211,15 @@ namespace Engine.Installer.Core
         /// Create a check definition from a data source and a pointer
         /// </summary>
         /// <param name="IData">Data, followed by the data pointer</param>
-        public static implicit operator CheckDefinition((List<byte>,int) IData)
+        public static implicit operator CheckDefinition((List<byte>,uint) IData)
         {
             List<byte> Source = IData.Item1;
             CheckDefinition check = new CheckDefinition();
-            int fileoffset = IData.Item2;
+            int fileoffset = (int)IData.Item2;
             try
             {
-                check.RawData = Source.GetBytes(fileoffset, 0xA).ToList(); //Force feed the 10 byte header
-                check.RawData.AddRange(Source.GetBytes(fileoffset + 0xA, check.CheckSize - 0xA)); //Pipe in the rest, accounting for the 10 bytes we force fed before
+                check.RawData = Source.GetBytes(fileoffset, 0x10).ToList(); //Force feed the 16 byte header
+                check.RawData.AddRange(Source.GetBytes(fileoffset + 0x10, check.CheckSize - 0x10)); //Pipe in the rest, accounting for the 16 bytes we force fed before
                 return check;
             }
             catch
@@ -268,7 +284,7 @@ namespace Engine.Installer.Core
         /// <param name="Flags">The flags of the check (can be 0)</param>
         /// <param name="args">Aruments to pass to the check</param>
         /// <returns></returns>
-        public static CheckDefinition DebugCheck(CheckTypes type, ushort ID, short Points, byte Flags, params string[] args)
+        public static CheckDefinition DebugCheck(CheckTypes type, ushort ID, short Points, byte Flags, uint OfflineAnswer, params string[] args)
         {
             CheckDefinition c = new CheckDefinition();
             c.CheckKey = (ushort)type;
@@ -279,6 +295,7 @@ namespace Engine.Installer.Core
             c.ArgsPtr = (ushort)c.RawData.Count; //super weird bug, this overwrites the arg ptr if the byte array is smaller before it adds the bytes.
             c.Arguments = args;
             c.CheckSize = (ushort)c.RawData.Count;
+            c.OfflineAnswer = OfflineAnswer;
             return c;
         }
 #endif

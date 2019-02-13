@@ -31,7 +31,7 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) > 0));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) >= 0));
 return version;
 }
 }

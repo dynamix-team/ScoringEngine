@@ -11,6 +11,7 @@ namespace Engine.Core
     {
         private readonly Dictionary<uint, uint> STATE = new Dictionary<uint, uint>();
         private readonly List<uint> QUEUE = new List<uint>();
+        private readonly Dictionary<uint, uint> EXPECTED = new Dictionary<uint, uint>();
         private bool Exit;
 
         /// <summary>
@@ -30,11 +31,26 @@ namespace Engine.Core
             return !Exit;
         }
 
+        /// <summary>
+        /// Register a check's state to pipe into the appropriate scoring channel
+        /// </summary>
+        /// <param name="id">The id of the state</param>
+        /// <param name="state">The state of the check</param>
         protected void RegisterCheck(uint id, uint state)
         {
             STATE[id] = state;
             if (!QUEUE.Contains(id))
                 QUEUE.Add(id);
+        }
+
+        /// <summary>
+        /// Inform the engine to expect a particular state of a check
+        /// </summary>
+        /// <param name="id">The ID to assign the state to</param>
+        /// <param name="state">The state to expect this ID to assume</param>
+        protected void Expect(uint id, uint state)
+        {
+            EXPECTED[id] = state;
         }
 
         /// <summary>
