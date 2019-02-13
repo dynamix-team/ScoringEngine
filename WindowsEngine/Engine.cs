@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Management;
 using System.Security.Cryptography;
 
 
@@ -31,21 +32,11 @@ namespace WindowsEngine
     {
 
         private FileVersionTemplate__0 c_0;
-private uint c_0_s;
-private FileVersionTemplate__1 c_1;
-private uint c_1_s;
-private FileVersionTemplate__2 c_2;
-private uint c_2_s;
-private FileVersionTemplate__3 c_3;
-private uint c_3_s;
-private FileVersionTemplate__4 c_4;
-private uint c_4_s;
-private FileVersionTemplate__5 c_5;
-private uint c_5_s;
-private FileVersionTemplate__6 c_6;
-private uint c_6_s;
-private FileVersionTemplate__7 c_7;
-private uint c_7_s;
+
+private uint c_0_s;
+private OptionalFeaturesTemplate__1 c_1;
+
+private uint c_1_s;
 
 
 #if DEBUG
@@ -55,27 +46,17 @@ private FileVersionTemplate__7 c_7;
 #endif
         {
             c_0 = new FileVersionTemplate__0(@"C:\Test\vmplayer.exe", @"15.0.0.38213"){ Flags = (byte)1 };
-c_1 = new FileVersionTemplate__1(@"C:\Test\vmplayer.exe", @"15.0.0.38213"){ Flags = (byte)1 };
-c_2 = new FileVersionTemplate__2(@"C:\Test\vmplayer.exe", @"15.0.0.38213"){ Flags = (byte)1 };
-c_3 = new FileVersionTemplate__3(@"C:\Test\vmplayer.exe", @"15.0.0.38213"){ Flags = (byte)1 };
-c_4 = new FileVersionTemplate__4(@"C:\Test\vmplayer.exe", @"15.0.0.38213"){ Flags = (byte)1 };
-c_5 = new FileVersionTemplate__5(@"C:\Test\vmplayer.exe", @"15.0.0.38213"){ Flags = (byte)1 };
-c_6 = new FileVersionTemplate__6(@"C:\Test\vmplayer.exe", @"15.0.0.38213"){ Flags = (byte)1 };
-c_7 = new FileVersionTemplate__7(@"C:\Test\vmplayer.exe", @"15.0.0.38213"){ Flags = (byte)1 };
+c_1 = new OptionalFeaturesTemplate__1(@"telnetclient"){ Flags = (byte)1 };
 
         }
 
         protected override async Task Tick()
         {
             if(c_0?.Enabled ?? false){ c_0_s = await c_0.GetCheckValue(); RegisterCheck((ushort)1|((uint)c_0.Flags << 16),c_0_s);}
-if(c_1?.Enabled ?? false){ c_1_s = await c_1.GetCheckValue(); RegisterCheck((ushort)2|((uint)c_1.Flags << 16),c_1_s);}
-if(c_2?.Enabled ?? false){ c_2_s = await c_2.GetCheckValue(); RegisterCheck((ushort)3|((uint)c_2.Flags << 16),c_2_s);}
-if(c_3?.Enabled ?? false){ c_3_s = await c_3.GetCheckValue(); RegisterCheck((ushort)4|((uint)c_3.Flags << 16),c_3_s);}
-if(c_4?.Enabled ?? false){ c_4_s = await c_4.GetCheckValue(); RegisterCheck((ushort)5|((uint)c_4.Flags << 16),c_4_s);}
-if(c_5?.Enabled ?? false){ c_5_s = await c_5.GetCheckValue(); RegisterCheck((ushort)6|((uint)c_5.Flags << 16),c_5_s);}
-if(c_6?.Enabled ?? false){ c_6_s = await c_6.GetCheckValue(); RegisterCheck((ushort)7|((uint)c_6.Flags << 16),c_6_s);}
-if(c_7?.Enabled ?? false){ c_7_s = await c_7.GetCheckValue(); RegisterCheck((ushort)8|((uint)c_7.Flags << 16),c_7_s);}
-
+
+if(c_1?.Enabled ?? false){ c_1_s = await c_1.GetCheckValue(); RegisterCheck((ushort)7|((uint)c_1.Flags << 16),c_1_s);}
+
+
         }
 
 #if ONLINE
@@ -122,219 +103,40 @@ return version;
 }
 
 //cst
-internal sealed class FileVersionTemplate__1 : CheckTemplate
+class OptionalFeaturesTemplate__1 : CheckTemplate
 {
-private readonly SafeString FilePath;
-private readonly SafeString TargetVersion;
-/// <summary>
-/// A file version check template
-/// </summary>
-/// <param name="args">[0:FilePath],[1:FileVersion]</param>
-internal FileVersionTemplate__1(params string[] args)
-{
-if (args.Length < 2)
-Enabled = false;
-FilePath = args[0];
-TargetVersion = args[1];
-}
-/// <summary>
-/// Get the check value
-/// </summary>
-/// <returns></returns>
+private readonly SelectQuery Query;
+private readonly ManagementObjectSearcher Searcher;
 internal override async Task<uint> GetCheckValue()
 {
-if (!File.Exists(FilePath))
+uint value = 0;
+try
 {
-return PrepareState("");
-}
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) > 0));
-return version;
-}
-}
-
-//cst
-internal sealed class FileVersionTemplate__2 : CheckTemplate
+foreach (ManagementObject envVar in Searcher.Get())
 {
-private readonly SafeString FilePath;
-private readonly SafeString TargetVersion;
-/// <summary>
-/// A file version check template
-/// </summary>
-/// <param name="args">[0:FilePath],[1:FileVersion]</param>
-internal FileVersionTemplate__2(params string[] args)
+value = await Task.FromResult<uint>(PrepareState(envVar["InstallState"].ToString()));
+return value;
+}
+}
+catch
 {
-if (args.Length < 2)
 Enabled = false;
-FilePath = args[0];
-TargetVersion = args[1];
+}
+return 0u;
 }
 /// <summary>
-/// Get the check value
+///
 /// </summary>
-/// <returns></returns>
-internal override async Task<uint> GetCheckValue()
+/// <param name="args">args[0] feature name</param>
+internal OptionalFeaturesTemplate__1(params string[] args)
 {
-if (!File.Exists(FilePath))
+if (args.Length < 1)
 {
-return PrepareState("");
-}
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) > 0));
-return version;
-}
-}
-
-//cst
-internal sealed class FileVersionTemplate__3 : CheckTemplate
-{
-private readonly SafeString FilePath;
-private readonly SafeString TargetVersion;
-/// <summary>
-/// A file version check template
-/// </summary>
-/// <param name="args">[0:FilePath],[1:FileVersion]</param>
-internal FileVersionTemplate__3(params string[] args)
-{
-if (args.Length < 2)
 Enabled = false;
-FilePath = args[0];
-TargetVersion = args[1];
+return;
 }
-/// <summary>
-/// Get the check value
-/// </summary>
-/// <returns></returns>
-internal override async Task<uint> GetCheckValue()
-{
-if (!File.Exists(FilePath))
-{
-return PrepareState("");
-}
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) > 0));
-return version;
-}
-}
-
-//cst
-internal sealed class FileVersionTemplate__4 : CheckTemplate
-{
-private readonly SafeString FilePath;
-private readonly SafeString TargetVersion;
-/// <summary>
-/// A file version check template
-/// </summary>
-/// <param name="args">[0:FilePath],[1:FileVersion]</param>
-internal FileVersionTemplate__4(params string[] args)
-{
-if (args.Length < 2)
-Enabled = false;
-FilePath = args[0];
-TargetVersion = args[1];
-}
-/// <summary>
-/// Get the check value
-/// </summary>
-/// <returns></returns>
-internal override async Task<uint> GetCheckValue()
-{
-if (!File.Exists(FilePath))
-{
-return PrepareState("");
-}
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) > 0));
-return version;
-}
-}
-
-//cst
-internal sealed class FileVersionTemplate__5 : CheckTemplate
-{
-private readonly SafeString FilePath;
-private readonly SafeString TargetVersion;
-/// <summary>
-/// A file version check template
-/// </summary>
-/// <param name="args">[0:FilePath],[1:FileVersion]</param>
-internal FileVersionTemplate__5(params string[] args)
-{
-if (args.Length < 2)
-Enabled = false;
-FilePath = args[0];
-TargetVersion = args[1];
-}
-/// <summary>
-/// Get the check value
-/// </summary>
-/// <returns></returns>
-internal override async Task<uint> GetCheckValue()
-{
-if (!File.Exists(FilePath))
-{
-return PrepareState("");
-}
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) > 0));
-return version;
-}
-}
-
-//cst
-internal sealed class FileVersionTemplate__6 : CheckTemplate
-{
-private readonly SafeString FilePath;
-private readonly SafeString TargetVersion;
-/// <summary>
-/// A file version check template
-/// </summary>
-/// <param name="args">[0:FilePath],[1:FileVersion]</param>
-internal FileVersionTemplate__6(params string[] args)
-{
-if (args.Length < 2)
-Enabled = false;
-FilePath = args[0];
-TargetVersion = args[1];
-}
-/// <summary>
-/// Get the check value
-/// </summary>
-/// <returns></returns>
-internal override async Task<uint> GetCheckValue()
-{
-if (!File.Exists(FilePath))
-{
-return PrepareState("");
-}
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) > 0));
-return version;
-}
-}
-
-//cst
-internal sealed class FileVersionTemplate__7 : CheckTemplate
-{
-private readonly SafeString FilePath;
-private readonly SafeString TargetVersion;
-/// <summary>
-/// A file version check template
-/// </summary>
-/// <param name="args">[0:FilePath],[1:FileVersion]</param>
-internal FileVersionTemplate__7(params string[] args)
-{
-if (args.Length < 2)
-Enabled = false;
-FilePath = args[0];
-TargetVersion = args[1];
-}
-/// <summary>
-/// Get the check value
-/// </summary>
-/// <returns></returns>
-internal override async Task<uint> GetCheckValue()
-{
-if (!File.Exists(FilePath))
-{
-return PrepareState("");
-}
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) > 0));
-return version;
+Query = new SelectQuery("Win32_OptionalFeature", "Name='" + args[0] + "'");
+Searcher = new ManagementObjectSearcher(Query);
 }
 }
 
