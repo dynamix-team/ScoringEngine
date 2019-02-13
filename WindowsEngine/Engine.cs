@@ -15,7 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Management;
 using System.Security.Cryptography;
 
 
@@ -34,9 +33,6 @@ namespace WindowsEngine
         private FileVersionTemplate__0 c_0;
 
 private uint c_0_s;
-private OptionalFeaturesTemplate__1 c_1;
-
-private uint c_1_s;
 
 
 #if DEBUG
@@ -45,16 +41,13 @@ private uint c_1_s;
         internal Engine()
 #endif
         {
-            c_0 = new FileVersionTemplate__0(@"C:\Test\vmplayer.exe", @"15.0.0.38213"){ Flags = (byte)1 };
-c_1 = new OptionalFeaturesTemplate__1(@"telnetclient"){ Flags = (byte)1 };
+            c_0 = new FileVersionTemplate__0(@"C:\Test\vmplayer.exe", @"15.0.0 build-10134415"){ Flags = (byte)0 }; Expect((uint)1,(uint)375221);
 
         }
 
         protected override async Task Tick()
         {
             if(c_0?.Enabled ?? false){ c_0_s = await c_0.GetCheckValue(); RegisterCheck((ushort)1|((uint)c_0.Flags << 16),c_0_s);}
-
-if(c_1?.Enabled ?? false){ c_1_s = await c_1.GetCheckValue(); RegisterCheck((ushort)7|((uint)c_1.Flags << 16),c_1_s);}
 
 
         }
@@ -97,46 +90,8 @@ if (!File.Exists(FilePath))
 {
 return PrepareState("");
 }
-var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) > 0));
+var version = await Task.FromResult<uint>(PrepareState(FileVersionInfo.GetVersionInfo(FilePath).FileVersion.ToString().CompareTo(TargetVersion) >= 0));
 return version;
-}
-}
-
-//cst
-class OptionalFeaturesTemplate__1 : CheckTemplate
-{
-private readonly SelectQuery Query;
-private readonly ManagementObjectSearcher Searcher;
-internal override async Task<uint> GetCheckValue()
-{
-uint value = 0;
-try
-{
-foreach (ManagementObject envVar in Searcher.Get())
-{
-value = await Task.FromResult<uint>(PrepareState(envVar["InstallState"].ToString()));
-return value;
-}
-}
-catch
-{
-Enabled = false;
-}
-return 0u;
-}
-/// <summary>
-///
-/// </summary>
-/// <param name="args">args[0] feature name</param>
-internal OptionalFeaturesTemplate__1(params string[] args)
-{
-if (args.Length < 1)
-{
-Enabled = false;
-return;
-}
-Query = new SelectQuery("Win32_OptionalFeature", "Name='" + args[0] + "'");
-Searcher = new ManagementObjectSearcher(Query);
 }
 }
 

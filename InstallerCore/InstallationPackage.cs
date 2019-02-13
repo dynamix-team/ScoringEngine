@@ -4,6 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
+/*  TODO
+    Patching Structures
+    #typedef CheckPatch
+    ushort PatchSize; //size of the patch
+    ushort PatchKey; //key of the check we are patching (so we know which check template to use)
+    byte PatchFlags; //any flags for the patch
+    byte NumArgs; //How many args does the patch have
+    ushort Padding; //Padding to even out the struct size
+    string[] Args;
+*/
 namespace Engine.Installer.Core
 {
     /// <summary>
@@ -49,25 +59,35 @@ namespace Engine.Installer.Core
 
         private List<byte> RawData;
 
-        /* Temp cause idk where to put this while designing
-
+        /* 
+            //Note: 64 byte header now always ends with UID
             #install.bin typedef
             byte[4] Magic = { (byte)'S', (byte)'E', (byte)'I', 0x0 };
             uint16 NumCheckDefs;
-            uint16* CheckDefPtr;
+            uint* CheckDefPtr;
             uint Flags;
-            uint Reserved;
+            uint16 NumPatches;
+
+            uint* PatchesPtr;
+
+            char* Reserved;
             byte[16] UniqueID; //Used for verification
             CheckDefinition[NumVulnDefs]
+            PatchDefinition[NumPatches]
         */
         private enum PackageFields : int
         {
             Magic = 0x0,
             NumCheckDefs = 0x4,
             CheckDefPtr = 0x6,
-            Flags = 0x8,
-            Reserved = 0xC,
-            UniqueID = 0x10,
+            Flags = 0xA,
+            NumPatches = 0xB,
+
+            PatchesPtr = 0x10,
+
+
+
+            UniqueID = 0x30,
         }
 
         /// <summary>
@@ -111,11 +131,11 @@ namespace Engine.Installer.Core
         /// <summary>
         /// Ptr to CheckDefs
         /// </summary>
-        private ushort CheckDefsPtr
+        private uint CheckDefsPtr
         {
             get
             {
-                return BitConverter.ToUInt16(RawData.GetBytes((int)PackageFields.CheckDefPtr, sizeof(ushort)), 0);
+                return BitConverter.ToUInt32(RawData.GetBytes((int)PackageFields.CheckDefPtr, sizeof(uint)), 0);
             }
             set
             {
@@ -135,21 +155,6 @@ namespace Engine.Installer.Core
             set
             {
                 RawData.SetBytes((int)PackageFields.Flags, BitConverter.GetBytes(value));
-            }
-        }
-
-        /// <summary>
-        /// Just some reserved space. Probably a crc32 eventually
-        /// </summary>
-        private uint Reserved
-        {
-            get
-            {
-                return BitConverter.ToUInt32(RawData.GetBytes((int)PackageFields.Reserved, sizeof(uint)), 0);
-            }
-            set
-            {
-                RawData.SetBytes((int)PackageFields.Reserved, BitConverter.GetBytes(value));
             }
         }
 
@@ -175,18 +180,18 @@ namespace Engine.Installer.Core
         /// <summary>
         /// All check pointers loaded into this installation
         /// </summary>
-        private ushort[] CheckPointers
+        private uint[] CheckPointers
         {
             get
             {
                 if (CheckDefsPtr == 0 || NumCheckDefs == 0)
                 {
-                    return new ushort[0];
+                    return new uint[0];
                 }
-                ushort[] pointers = new ushort[NumCheckDefs];
+                uint[] pointers = new uint[NumCheckDefs];
                 for(int i = 0; i < NumCheckDefs; i++)
                 {
-                    pointers[i] = BitConverter.ToUInt16(RawData.ToArray(), CheckDefsPtr + sizeof(ushort) * i);
+                    pointers[i] = BitConverter.ToUInt32(RawData.ToArray(), (int)(CheckDefsPtr + sizeof(uint) * i));
                 }
                 return pointers;
             }
@@ -194,7 +199,7 @@ namespace Engine.Installer.Core
             {
                 for(int i = 0; i < value.Length; i++)
                 {
-                    RawData.SetBytes(CheckDefsPtr + i * sizeof(ushort), BitConverter.GetBytes(value[i]));
+                    RawData.SetBytes((int)(CheckDefsPtr + sizeof(uint) * i), BitConverter.GetBytes(value[i]));
                 }
             }
         }
@@ -216,23 +221,23 @@ namespace Engine.Installer.Core
             set
             {
                 CheckDefinition[] checks = Checks;
-                ushort[] checkptrs = CheckPointers;
+                uint[] checkptrs = CheckPointers;
                 for (int i = checks.Length - 1; i > -1; i--)
                 {
-                    RawData.RemoveRange(checkptrs[i], checks[i].CheckSize);
+                    RawData.RemoveRange((int)checkptrs[i], checks[i].CheckSize);
                 }
                 for(int i = 0; i < checkptrs.Length; i++)
                 {
-                    RawData.RemoveRange(CheckDefsPtr, 2);
+                    RawData.RemoveRange((int)CheckDefsPtr, sizeof(int));
                 }
                 for(int i = 0; i < value.Length; i++)
                 {
-                    RawData.InsertRange(CheckDefsPtr, new byte[2]);
+                    RawData.InsertRange((int)CheckDefsPtr, new byte[sizeof(int)]);
                 }
-                checkptrs = new ushort[value.Length];
+                checkptrs = new uint[value.Length];
                 for (int i = 0; i < value.Length; i++)
                 {
-                    checkptrs[i] = (ushort)RawData.Count;
+                    checkptrs[i] = (uint)RawData.Count;
                     RawData.AddRange((byte[])value[i]);
                 }
                 CheckPointers = checkptrs;
@@ -279,7 +284,7 @@ namespace Engine.Installer.Core
                 package.RawData = new List<byte>();
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(XMLInput);
-                package.RawData.AddRange(new byte[32]);
+                package.RawData.AddRange(new byte[64]);
                 package.Flags |= (uint)InstallFlags.Debug;
                 package.Magic = Encoding.ASCII.GetBytes(FileMagic);
 
@@ -293,7 +298,7 @@ namespace Engine.Installer.Core
                         {
                             args[i] = node["arguments"].ChildNodes[i].InnerText;
                         }
-                        CheckDefinition d = CheckDefinition.DebugCheck(checktype, Convert.ToUInt16(node["id"].InnerText), Convert.ToInt16(node["points"].InnerText), Convert.ToByte(node["flags"].InnerText), args);
+                        CheckDefinition d = CheckDefinition.DebugCheck(checktype, Convert.ToUInt16(node["id"].InnerText), Convert.ToInt16(node["points"].InnerText), Convert.ToByte(node["flags"].InnerText), uint.Parse(node["answer"].InnerText, System.Globalization.NumberStyles.HexNumber), args);
                         if (d != null)
                             checks.Add(d);
                     }
@@ -303,7 +308,7 @@ namespace Engine.Installer.Core
                         Console.WriteLine(e.Message);
                     }
                 }
-                package.CheckDefsPtr = (ushort)package.RawData.Count;
+                package.CheckDefsPtr = (uint)package.RawData.Count;
                 package.Checks = checks.ToArray();
                 return package;
             }
