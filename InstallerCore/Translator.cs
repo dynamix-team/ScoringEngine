@@ -99,7 +99,7 @@ namespace Engine.Installer.Core.Templates
                     {
                         args[i] = node["arguments"].ChildNodes[i].InnerText;
                     }
-                    CheckDefinition d = CheckDefinition.DebugCheck(checktype, Convert.ToUInt16(node["id"].InnerText), Convert.ToInt16(node["points"].InnerText), Convert.ToByte(node["flags"].InnerText), args);
+                    CheckDefinition d = CheckDefinition.DebugCheck(checktype, Convert.ToUInt16(node["id"].InnerText), Convert.ToInt16(node["points"].InnerText), Convert.ToByte(node["flags"].InnerText), uint.Parse(node["answer"].InnerText, System.Globalization.NumberStyles.HexNumber), args);
                     if (d != null)
                         checks.Add(d);
                 }
@@ -161,7 +161,7 @@ namespace Engine.Installer.Core.Templates
                     {
                         args += "@\"" + arguments[i] + "\"" + (i == arguments.Length - 1 ? "" : ", ");
                     }
-                    check.Declarator = "c_" + count + " = new " + check.ClassName + "(" + args + "){ Flags = (byte)" + check.Definition.Flags + " };";
+                    check.Declarator = "c_" + count + " = new " + check.ClassName + "(" + args + "){ Flags = (byte)" + check.Definition.Flags + " }; Expect((uint)" + check.Definition.CheckKey + "," + "(uint)" + check.Definition.OfflineAnswer + ");";
                     check.InstanceName = "c_" + count;
                     check.StateName = check.InstanceName + "_s";
                     check.Header = "private " + check.ClassName + " c_" + count + ";\n\rprivate uint " + check.StateName + ";";

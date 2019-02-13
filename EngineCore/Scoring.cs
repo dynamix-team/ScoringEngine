@@ -53,6 +53,7 @@ namespace Engine.Core
                 else
                 {
 #if DEBUG
+
                     try
                     {
                         string result = "";
