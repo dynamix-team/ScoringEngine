@@ -9,9 +9,9 @@ namespace Engine.Core
     /// </summary>
     public abstract class EngineFrame
     {
-        private readonly Dictionary<uint, uint> STATE = new Dictionary<uint, uint>();
+        internal readonly Dictionary<uint, uint> STATE = new Dictionary<uint, uint>();
         private readonly List<uint> QUEUE = new List<uint>();
-        private readonly Dictionary<uint, uint> EXPECTED = new Dictionary<uint, uint>();
+
         private bool Exit;
 
         /// <summary>
@@ -44,16 +44,6 @@ namespace Engine.Core
         }
 
         /// <summary>
-        /// Inform the engine to expect a particular state of a check
-        /// </summary>
-        /// <param name="id">The ID to assign the state to</param>
-        /// <param name="state">The state to expect this ID to assume</param>
-        protected void Expect(uint id, uint state)
-        {
-            EXPECTED[id] = state;
-        }
-
-        /// <summary>
         /// Gets a batch to push to the server, while mutating the queue.
         /// </summary>
         /// <param name="BatchSize">The maximum amount of items to retrieve</param>
@@ -81,14 +71,36 @@ namespace Engine.Core
         /// Is the engine an online engine
         /// </summary>
         /// <returns></returns>
-        public virtual bool IsOnline()
+        public bool IsOnline()
         {
+#if OFFLINE
+            return false;
+#else
             return true;
+#endif
         }
 
         /// <summary>
         /// Collect the states of all of the checks on the system
         /// </summary>
         internal protected abstract System.Threading.Tasks.Task Tick();
+
+        #region OFFLINE
+        #if OFFLINE
+        /// <summary>
+        /// A table of expected values for states
+        /// </summary>
+        private readonly Dictionary<ushort, Scoring.ScoringItem> EXPECTED = new Dictionary<ushort, Scoring.ScoringItem>();
+
+        /// <summary>
+        /// Register an offline check to be scored
+        /// </summary>
+        internal protected void Expect(ushort id, Scoring.ScoringItem ExpectedState)
+        {
+            EXPECTED[id] = ExpectedState;
+        }
+        #endif
+        #endregion
+
     }
 }

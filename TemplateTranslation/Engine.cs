@@ -1,9 +1,4 @@
-﻿#if DEBUG
-//?debug.online
-#else
-//?installer.online
-#endif
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,18 +32,6 @@ namespace WindowsEngine
         {
             //?installer.tick
         }
-
-#if ONLINE
-        public override bool IsOnline()
-        {
-            return true;
-        }
-#else
-        public override bool IsOnline()
-        {
-            return false;
-        }
-#endif
 
         //?installer.classes
     }

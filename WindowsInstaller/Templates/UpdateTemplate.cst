@@ -1,0 +1,57 @@
+//cst
+//?using System;
+//?using System.Management;
+//?using System.Threading.Tasks;
+class UpdateTemplate : CheckTemplate
+{
+private readonly SafeString Query;
+private readonly uint TargetUpdate;
+private ManagementObjectCollection Collection;
+private readonly ManagementObjectSearcher Search;
+private enum CheckType
+{
+exists,
+notexists,
+}
+private readonly CheckType Check;
+internal override async Task<uint> GetCheckValue()
+{
+try
+{
+Collection = Search.Get();
+foreach (ManagementObject quickFix in Collection)
+{
+if(PrepareState(quickFix["HotFixID"]) == TargetUpdate)
+{
+return await Task.FromResult<uint>(PrepareState(Check == CheckType.exists));
+}
+}
+return PrepareState(Check != CheckType.exists);
+}
+catch
+{
+Enabled = false;
+return 0u;
+}
+}
+internal UpdateTemplate(params string[] args)
+{
+if (args.Length < 2)
+{
+Enabled = false;
+return;
+}
+try
+{
+Enum.TryParse(args[1], true, out CheckType checkType);
+Check = checkType;
+}
+catch
+{
+Enabled = false;
+}
+TargetUpdate = PrepareState(args[0]);
+Query = "SELECT HotFixID FROM Win32_QuickFixEngineering";
+Search = new ManagementObjectSearcher(Query);
+}
+}
