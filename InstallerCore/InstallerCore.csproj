@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Engine.Installer.Core</AssemblyName>
     <RootNamespace>Engine.Installer.Core</RootNamespace>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -21,6 +22,7 @@
     <None Remove="CheckTemplate.cs~RF13931ce8.TMP" />
     <None Remove="CheckTemplate.cs~RF139510f8.TMP" />
     <None Remove="CheckTemplate.cs~RF1a4121cd.TMP" />
+    <None Remove="CheckTemplate.cs~RF406eec51.TMP" />
     <None Remove="CheckTypes.cs~RF1a2a654e.TMP" />
     <None Remove="CSTemplate.cs~RF1ae03b1c.TMP" />
     <None Remove="CSTemplate.cs~RF1ae0f341.TMP" />

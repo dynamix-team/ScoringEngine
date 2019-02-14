@@ -76,7 +76,7 @@ namespace Engine.Installer.Core.Templates
             CSTemplate _checktemplate = System.IO.File.ReadAllLines(RuntimeTemplates[CheckTypes.CheckTemplate]);
             Wrappers.Add(new CheckPreWrapper() { Definition = null, Template = _checktemplate });
 
-            return BuildEngine(EngineBase, Wrappers.ToArray(), true);
+            return BuildEngine(EngineBase, Wrappers.ToArray());
         }
 
         /// <summary>
@@ -120,10 +120,9 @@ namespace Engine.Installer.Core.Templates
         /// <param name="EngineBase">The base of the engine</param>
         /// <param name="checks">A list of checks</param>
         /// <returns></returns>
-        private static string BuildEngine(string EngineBase, CheckPreWrapper[] checks, bool debug)
+        private static string BuildEngine(string EngineBase, CheckPreWrapper[] checks)
         {
             List<string> Includes = new List<string>();
-            List<string> ClassCode = new List<string>();
             int count = 0;
             string engine_classes = "";
             string engine_includes = "";

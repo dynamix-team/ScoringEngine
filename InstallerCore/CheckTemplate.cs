@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.IO;
@@ -35,6 +33,14 @@ internal abstract class CheckTemplate
     /// Speed at which this value updates
     /// </summary>
     internal virtual uint TickDelay => 1000;
+    /// <summary>
+    /// The message to display for offline scoring when the check is completed
+    /// </summary>
+    internal virtual SafeString CompletedMessage => "Check passed";
+    /// <summary>
+    /// The message to display for offline scoring when the check is failed
+    /// </summary>
+    internal virtual SafeString FailedMessage => "Check failed";
     #endregion
 
     #region PRIVATE
@@ -80,7 +86,7 @@ internal abstract class CheckTemplate
     /// <returns></returns>
     internal bool CanTick()
     {
-        if (STATE_LOCK)
+        if (STATE_LOCK || Failed)
             return false; //Already ticking
         if(!Timer.IsRunning)
         {
@@ -145,10 +151,43 @@ internal abstract class CheckTemplate
         return PrepareString(o_state.ToString());
     }
 
+    private bool __enabled__ = true;
+
     /// <summary>
     /// Is this check enabled for evaluation?
     /// </summary>
-    internal bool Enabled = true;
+    internal bool Enabled
+    {
+        get
+        {
+            return Failed ? false : __enabled__;
+        }
+        set
+        {
+            __enabled__ = Failed ? false : value;
+        }
+    }
+
+    /// <summary>
+    /// Has this check been irreversably failed
+    /// </summary>
+    private bool __failed__ = false;
+    /// <summary>
+    /// Has this check been irreversably failed
+    /// </summary>
+    internal bool Failed
+    {
+        get
+        {
+            return __failed__;
+        }
+        set
+        {
+            if (__failed__)
+                return;
+            __failed__ = value;
+        }
+    }
 
     /// <summary>
     /// Flags for a check definition

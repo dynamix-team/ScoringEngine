@@ -13,26 +13,28 @@ namespace Engine.Installer.Core
         //#align(0xF)
         /*
                 #CheckDef typedef
+                ushort CheckSize;
                 uint16 CheckKey; //The key identifier for a vuln
                 uint16 CheckID; //The identifier of this specific check for online scoring
                 uint16 NumPoints;
                 byte Flags;
                 byte NumArgs;
                 uint OfflineAnswer; //If this is an offline image, the answer to the check (PJW hashed)
-                ushort CheckSize;
                 ushort ArgsPtr;
+                
                 string[NumArgs] Arguments;
         */
         private enum CheckDefFields
         {
-            CheckKey = 0x0,
-            CheckID = 0x2,
-            NumPoints = 0x4,
-            Flags = 0x6,
-            NumArgs = 0x7,
-            OfflineAnswer = 0x8,
-            CheckSize = 0xC,
-            ArgsPtr = 0xE
+            CheckSize = 0,
+            CheckKey = 0x2,
+            CheckID = 0x4,
+            NumPoints = 0x6,
+            Flags = 0x8,
+            NumArgs = 0x9,
+            OfflineAnswer = 0xA,
+            ArgsPtr = 0xE,
+
         }
 
         private CheckDefinition()
@@ -173,7 +175,7 @@ namespace Engine.Installer.Core
                     return new string[0];
                 string[] args = new string[NumArgs];
                 int index = ArgsPtr;
-                for(int i = 0; i < NumArgs; i++)
+                for (int i = 0; i < NumArgs; i++)
                 {
                     args[i] = RawData.ReadString(ref index);
                 }
@@ -202,7 +204,7 @@ namespace Engine.Installer.Core
         /// Get the raw data of a check definition
         /// </summary>
         /// <param name="d"></param>
-        public static implicit operator byte[](CheckDefinition d)
+        public static implicit operator byte[] (CheckDefinition d)
         {
             return d.RawData.ToArray();
         }
@@ -211,15 +213,15 @@ namespace Engine.Installer.Core
         /// Create a check definition from a data source and a pointer
         /// </summary>
         /// <param name="IData">Data, followed by the data pointer</param>
-        public static implicit operator CheckDefinition((List<byte>,uint) IData)
+        public static implicit operator CheckDefinition((List<byte>, uint) IData)
         {
             List<byte> Source = IData.Item1;
             CheckDefinition check = new CheckDefinition();
             int fileoffset = (int)IData.Item2;
             try
             {
-                check.RawData = Source.GetBytes(fileoffset, 0x10).ToList(); //Force feed the 16 byte header
-                check.RawData.AddRange(Source.GetBytes(fileoffset + 0x10, check.CheckSize - 0x10)); //Pipe in the rest, accounting for the 16 bytes we force fed before
+                check.RawData = Source.GetBytes(fileoffset, sizeof(ushort)).ToList(); //Force feed the size
+                check.RawData.AddRange(Source.GetBytes(fileoffset + sizeof(ushort), check.CheckSize - sizeof(ushort))); //Pipe in the rest, accounting for the 2 bytes we force fed before
                 return check;
             }
             catch

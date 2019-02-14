@@ -3,10 +3,23 @@
 //?using Microsoft.Win32;
 internal class RegTemplate : CheckTemplate
 {
-private readonly RegistryKey RegKey;
+private RegistryKey RegKey;
+private readonly RegistryKey Root;
 private readonly SafeString RegVal;
+private readonly SafeString RegPath;
 internal override async Task<uint> GetCheckValue()
 {
+if(RegKey == null)
+{
+try
+{
+RegKey = Root.OpenSubKey(RegPath);
+}
+catch
+{
+return 0;
+}
+}
 try
 {
 var value = await Task.FromResult<uint>(PrepareState(RegKey.GetValue(RegVal)));
@@ -24,7 +37,8 @@ if (args.Length < 3)
 Enabled = false;
 return;
 }
-RegistryKey key = null;
+Root = null;
+RegPath = args[1];
 RegVal = args[2];
 switch (args[0].ToUpper())
 {
@@ -32,41 +46,40 @@ case "HKEY_CLASSES_ROOT":
 case "CLASSES_ROOT":
 case "CLASSESROOT":
 case "CLASSES":
-key = Registry.ClassesRoot;
+Root = Registry.ClassesRoot;
 break;
 case "HKEY_CURRENT_CONFIG":
 case "CURRENT_CONFIG":
 case "CURRENTCONFIG":
 case "CONFIG":
-key = Registry.CurrentConfig;
+Root = Registry.CurrentConfig;
 break;
 case "HKEY_CURRENT_USER":
 case "CURRENT_USER":
 case "CURRENTUSER":
 case "USER":
-key = Registry.CurrentUser;
+Root = Registry.CurrentUser;
 break;
 case "HKEY_PERFORMANCE_DATA":
 case "PERFORMANCE_DATA":
 case "PERFORMANCEDATA":
 case "PERFORMANCE":
-key = Registry.PerformanceData;
+Root = Registry.PerformanceData;
 break;
 case "HKEY_USERS":
 case "USERS":
-key = Registry.Users;
+Root = Registry.Users;
 break;
 default:
-key = Registry.LocalMachine;
+Root = Registry.LocalMachine;
 break;
 }
 try
 {
-RegKey = key.OpenSubKey(args[1]);
+RegKey = Root.OpenSubKey(args[1]);
 }
 catch
 {
-Enabled = false;
 }
 }
 }

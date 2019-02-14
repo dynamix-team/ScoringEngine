@@ -53,7 +53,6 @@ namespace Engine.Core
                 else
                 {
 #if DEBUG
-
                     try
                     {
                         string result = "";
@@ -68,11 +67,24 @@ namespace Engine.Core
 
                     }
 #endif
-                    //else send batch to scoring utilities
+                    await OfflineTick(Batch);
                 }
-
+                
                 await Task.Delay(EngineTickDelay);
             }
+        }
+
+        /// <summary>
+        /// Score an offline engine
+        /// </summary>
+        /// <param name="Batch">The batch to score</param>
+        /// <returns></returns>
+        private static async Task OfflineTick((uint, uint)[] Batch)
+        {
+            await Task.Run(() =>
+            {
+
+            });
         }
     }
 }
