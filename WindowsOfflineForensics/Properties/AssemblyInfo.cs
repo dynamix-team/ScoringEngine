@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Dynamix")]
+[assembly: AssemblyTitle("WindowsOfflineForensics")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Dynamix")]
-[assembly: AssemblyCopyright("Copyright (C) 2018-2018 CPDiscord Development Team")]
+[assembly: AssemblyProduct("WindowsOfflineForensics")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("af2dd288-0418-4081-bd60-a5dd20ce26e8")]
+[assembly: Guid("02cb3761-e0ae-45f3-a568-6ab202e2a8d5")]
 
 // Version information for an assembly consists of the following four values:
 //

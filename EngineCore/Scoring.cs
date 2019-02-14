@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Engine.Core
@@ -67,11 +64,52 @@ namespace Engine.Core
 
                     }
 #endif
+
+#if OFFLINE
                     await OfflineTick(Batch);
+#endif
                 }
                 
                 await Task.Delay(EngineTickDelay);
             }
+        }
+
+        #region OFFLINE
+        #if OFFLINE
+        /// <summary>
+        /// The state of a scoring item
+        /// </summary>
+        public enum ScoringState
+        {
+            InProgress,
+            Completed,
+            Failed
+        }
+
+        /// <summary>
+        /// An offline scoring item
+        /// </summary>
+        public sealed class ScoringItem
+        {
+            /// <summary>
+            /// The state of this scoring item
+            /// </summary>
+            public Scoring.ScoringState State = ScoringState.InProgress;
+            /// <summary>
+            /// The expected value of this scoring item
+            /// </summary>
+            public uint ExpectedState = 0;
+            /// <summary>
+            /// The number of points this scoring item is worth
+            /// </summary>
+            public ushort NumPoints = 0;
+
+            public delegate string ScoringStatus();
+
+            public ScoringStatus SuccessStatus = () => { return "Check passed."; }; //Quick explanation: We want status safestring'd, but safestring is not cross assembly for security reasons, so
+                                                                                    //we make this a delegate so that the engine derivative with safestring can return the assigned safestring...
+            public ScoringStatus FailureStatus = () => { return "Check failed."; };
+
         }
 
         /// <summary>
@@ -86,5 +124,7 @@ namespace Engine.Core
 
             });
         }
+        #endif
+        #endregion
     }
 }

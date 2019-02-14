@@ -129,7 +129,11 @@ namespace Engine.Installer.Core
         {
             get
             {
+#if OFFLINE
                 return BitConverter.ToUInt32(RawData.GetBytes((int)CheckDefFields.OfflineAnswer, sizeof(uint)), 0);
+#else
+                return 0u;
+#endif
             }
             set
             {

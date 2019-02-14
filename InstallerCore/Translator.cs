@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
 namespace Engine.Installer.Core.Templates
@@ -10,30 +9,8 @@ namespace Engine.Installer.Core.Templates
     /// </summary>
     public static class Translator
     {
-        /// <summary>
-        /// Convert CS source to a CST
-        /// </summary>
-        /// <param name="CSInput">The c# source code</param>
-        /// <returns>A CST formatted string</returns>
-        public static string MakeCST(string CSInput)
-        {
-            string result = "//cst\r\n";
-            CSInput = CSInput.Replace(";", ";\r\n"); //Fix any inlining so we can get accurate using defs
-            string[] lines = CSInput.Split('\n', '\r');
-            bool EndUsings = false;
-            foreach (string s in lines)
-            {
-                if (s.Trim().Length < 1)
-                    continue;
-                if (!EndUsings && s.Trim().Length > 6 && s.Trim().Substring(0, 5) == "using")
-                    result += "//?";
-                else
-                    EndUsings = true;
-                result += s.Trim() + "\r\n";
-            }
-            return result;
-        }
-#if DEBUG       
+        #region DEBUG
+        #if DEBUG
         /// <summary>
         /// Build a debugging engine from the installation framework
         /// </summary>
@@ -42,7 +19,6 @@ namespace Engine.Installer.Core.Templates
         /// <returns></returns>
         public static string BuildDebuggingEngine(string EngineBase, string TemplatesDirectory, CheckDefinition[] checks, bool Online)
         {
-            EngineBase = EngineBase.Replace("//?debug.online", Online ? "#define ONLINE" : "#undef ONLINE");
             Dictionary<CheckTypes, string> RuntimeTemplates = new Dictionary<CheckTypes, string>();
             try
             {
@@ -62,7 +38,7 @@ namespace Engine.Installer.Core.Templates
 
             List<CheckPreWrapper> Wrappers = new List<CheckPreWrapper>();
 
-            foreach(var check in checks)
+            foreach (var check in checks)
             {
                 try
                 {
@@ -89,13 +65,13 @@ namespace Engine.Installer.Core.Templates
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(input);
             List<CheckDefinition> checks = new List<CheckDefinition>();
-            foreach(XmlNode node in doc.GetElementsByTagName("check"))
+            foreach (XmlNode node in doc.GetElementsByTagName("check"))
             {
                 try
                 {
                     Enum.TryParse(node["key"].InnerText, true, out CheckTypes checktype);
                     string[] args = new string[node["arguments"].ChildNodes.Count];
-                    for(int i = 0; i < args.Length; i++)
+                    for (int i = 0; i < args.Length; i++)
                     {
                         args[i] = node["arguments"].ChildNodes[i].InnerText;
                     }
@@ -103,17 +79,41 @@ namespace Engine.Installer.Core.Templates
                     if (d != null)
                         checks.Add(d);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-#if DEBUG
                     Console.WriteLine(e.StackTrace.ToString());
                     Console.WriteLine(e.Message);
-#endif
                 }
             }
             return checks.ToArray();
         }
-#endif
+        #endif
+        #endregion
+
+        /// <summary>
+        /// Convert CS source to a CST
+        /// </summary>
+        /// <param name="CSInput">The c# source code</param>
+        /// <returns>A CST formatted string</returns>
+        public static string MakeCST(string CSInput)
+        {
+            string result = "//cst\r\n";
+            CSInput = CSInput.Replace(";", ";\r\n"); //Fix any inlining so we can get accurate using defs
+            string[] lines = CSInput.Split('\n', '\r');
+            bool EndUsings = false;
+            foreach (string s in lines)
+            {
+                if (s.Trim().Length < 1)
+                    continue;
+                if (!EndUsings && s.Trim().Length > 6 && s.Trim().Substring(0, 5) == "using")
+                    result += "//?";
+                else
+                    EndUsings = true;
+                result += s.Trim() + "\r\n";
+            }
+            return result;
+        }
+
         /// <summary>
         /// Build an engine.cs from a base engine and a list of checks
         /// </summary>
@@ -134,7 +134,7 @@ namespace Engine.Installer.Core.Templates
                 foreach(string include in check.Template.Includes)
                 {
                     if(!engine_includes.Contains(include))
-                        engine_includes += include + "\n";
+                        engine_includes += include + "\r\n";
                     Includes.Add(include);
                 }
                 string code = "";
@@ -160,15 +160,29 @@ namespace Engine.Installer.Core.Templates
                     {
                         args += "@\"" + arguments[i] + "\"" + (i == arguments.Length - 1 ? "" : ", ");
                     }
-                    check.Declarator = "c_" + count + " = new " + check.ClassName + "(" + args + "){ Flags = (byte)" + check.Definition.Flags + " }; Expect((uint)" + check.Definition.CheckKey + "," + "(uint)" + check.Definition.OfflineAnswer + ");";
+                    check.Declarator = "c_" + count + " = new " + check.ClassName + "(" + args + "){ Flags = (byte)" + check.Definition.Flags + " };";
                     check.InstanceName = "c_" + count;
                     check.StateName = check.InstanceName + "_s";
-                    check.Header = "private " + check.ClassName + " c_" + count + ";\n\rprivate uint " + check.StateName + ";";
-                    
+                    check.Header = "\r\nprivate " + check.ClassName + " c_" + count + "; private uint " + check.StateName + ";\r\n";
+
+
+#if OFFLINE
+                    check.Declarator += "Scoring.ScoringItem si_" + count + " = new Scoring.ScoringItem() {" +
+                        "ExpectedState = (uint)" + check.Definition.OfflineAnswer + ", " +
+                        "NumPoints = (ushort)" + check.Definition.NumPoints + "}; ";
+
+                    check.Declarator += "si_" + count + ".SuccessStatus = () => { return " + check.InstanceName + ".CompletedMessage; }; ";
+                    check.Declarator += "si_" + count + ".FailureStatus = () => { return " + check.InstanceName + ".FailedMessage; };";
+
+                    check.Declarator += "Expect(" +
+                        "(ushort)" + check.Definition.CheckID + "," +
+                        "si_" + count + "); ";
+#endif
+
                     engine_fields += check.Header + "\r\n";
                     engine_init += check.Declarator + "\r\n";
                     engine_tick += "if(" + check.InstanceName + "?.Enabled ?? false){ " + check.StateName + " = await " + check.InstanceName + ".GetCheckValue(); ";
-                    engine_tick += "RegisterCheck((ushort)" + check.Definition.CheckID + "|((uint)" + check.InstanceName + ".Flags << 16)," + check.StateName + ");}\n\r";
+                    engine_tick += "RegisterCheck((ushort)" + check.Definition.CheckID + "|((uint)" + check.InstanceName + ".Flags << 16)," + check.StateName + ");}\r\n";
                 }
                 count++;
             }

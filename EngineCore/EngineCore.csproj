@@ -2,11 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>default</LangVersion>
+    <LangVersion>8.0</LangVersion>
+    <Configurations>Debug;Release;DebugOffline;DebugOnline</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugOnline|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugOffline|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;OFFLINE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +36,7 @@
     <None Remove="OfflineScoring.cs~RF3b431657.TMP" />
     <None Remove="OfflineScoring.cs~RF3b437782.TMP" />
     <None Remove="OfflineScoring.cs~RF3b4a8c30.TMP" />
+    <None Remove="Reporting.cs~RF2d0321.TMP" />
     <None Remove="Scoring.cs~RF1f908392.TMP" />
     <None Remove="Scoring.cs~RF1f9265cf.TMP" />
     <None Remove="Scoring.cs~RF1f95b5e5.TMP" />
