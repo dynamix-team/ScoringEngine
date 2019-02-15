@@ -36,7 +36,7 @@ private FileVersionTemplate__0 c_0; private uint c_0_s;
         internal Engine()
 #endif
         {
-            c_0 = new FileVersionTemplate__0(@"C:\Test\vmplayer.exe", @"15.0.0 build-10134415"){ Flags = (byte)0 };Scoring.ScoringItem si_0 = new Scoring.ScoringItem() {ExpectedState = (uint)375221, NumPoints = (ushort)10}; si_0.SuccessStatus = () => { return c_0.CompletedMessage; }; si_0.FailureStatus = () => { return c_0.FailedMessage; };Expect((ushort)1,si_0); 
+            c_0 = new FileVersionTemplate__0(@"C:\Test\vmplayer.exe", @"15.0.0 build-10134415"){ Flags = (byte)0 }; c_0.CheckFailed = () => { Fail((ushort)1); }; Scoring.ScoringItem si_0 = new Scoring.ScoringItem() {ExpectedState = (uint)375221, NumPoints = (short)10}; si_0.SuccessStatus = () => { return c_0.CompletedMessage; }; si_0.FailureStatus = () => { return c_0.FailedMessage; };Expect((ushort)1,si_0); 
 
         }
 
@@ -240,19 +240,28 @@ return __failed__;
 }
 set
 {
-if (__failed__)
+if (__failed__ || !value)
 return;
-__failed__ = value;
+__failed__ = true;
+CheckFailed?.Invoke();
 }
 }
+/// <summary>
+/// A scoring event
+/// </summary>
+internal delegate void ScoringEvent();
+/// <summary>
+/// Called when the check fails
+/// </summary>
+internal ScoringEvent CheckFailed;
 /// <summary>
 /// Flags for a check definition
 /// </summary>
 [Flags]
-internal enum CheckFlags
+internal enum CheckDefFlags : byte
 {
 }
-private bool HasFlag(CheckFlags flag)
+private bool HasFlag(CheckDefFlags flag)
 {
 return (Flags & (byte)flag) > 0;
 }

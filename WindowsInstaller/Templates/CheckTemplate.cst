@@ -165,19 +165,28 @@ return __failed__;
 }
 set
 {
-if (__failed__)
+if (__failed__ || !value)
 return;
-__failed__ = value;
+__failed__ = true;
+CheckFailed?.Invoke();
 }
 }
+/// <summary>
+/// A scoring event
+/// </summary>
+internal delegate void ScoringEvent();
+/// <summary>
+/// Called when the check fails
+/// </summary>
+internal ScoringEvent CheckFailed;
 /// <summary>
 /// Flags for a check definition
 /// </summary>
 [Flags]
-internal enum CheckFlags
+internal enum CheckDefFlags : byte
 {
 }
-private bool HasFlag(CheckFlags flag)
+private bool HasFlag(CheckDefFlags flag)
 {
 return (Flags & (byte)flag) > 0;
 }

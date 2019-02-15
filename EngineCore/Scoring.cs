@@ -1,5 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+//TODO: Failure states through event binding: translator binds the failure event to a built in engine function, FAIL(ID), which for online reports to the networking layer, and offline, fails the eval.
+//Online will report a detected failure, and allow server to qualify it through server side logic
+
+//TODO: optional flag for checks to prevent state regression (optimization)
 
 namespace Engine.Core
 {
@@ -102,7 +106,7 @@ namespace Engine.Core
             /// <summary>
             /// The number of points this scoring item is worth
             /// </summary>
-            public ushort NumPoints = 0;
+            public short NumPoints = 0;
 
             public delegate string ScoringStatus();
 
@@ -121,7 +125,10 @@ namespace Engine.Core
         {
             await Task.Run(() =>
             {
-
+                foreach(var checkresult in Batch)
+                {
+                    Engine.Evaluate((ushort)checkresult.Item1);
+                }
             });
         }
         #endif

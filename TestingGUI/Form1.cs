@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using CPVulnerabilityFramework.Core;
 using System.IO;
 using System.Xml;
 using System.Reflection;
