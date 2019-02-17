@@ -112,7 +112,7 @@ namespace WindowsInstaller
         /// </summary>
         /// <param name="key">The key to validate</param>
         /// <returns></returns>
-        private bool KeyMeetsCriteria(string key)
+        private bool KeyMeetsCriteria(string key) //note: includes dashes, so final mask needs to reflect 0b1101
         {
             int result = 0;
             foreach(char c in key)

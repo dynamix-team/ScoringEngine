@@ -16,7 +16,7 @@ namespace Engine.Installer.Core
     /// <summary>
     /// All networking interfaces and components that require networking
     /// </summary>
-    internal static class Networking
+    public static class Networking
     {
         private const string GitUsername = "dynamix-team";
         private const string GitRepoName = "ScoringEngine";
@@ -76,7 +76,7 @@ namespace Engine.Installer.Core
         /// <param name="outdir">The directory to write the file to</param>
         /// <param name="outname">The name of the file to write</param>
         /// <returns>The result of the operation</returns>
-        internal static async Task<bool> DownloadResource(string URL, string outdir, string outname)
+        public static async Task<bool> DownloadResource(string URL, string outdir, string outname)
         {
             try
             {

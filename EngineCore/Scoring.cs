@@ -73,7 +73,6 @@ namespace Engine.Core
                     await OfflineTick(Batch);
 #endif
                 }
-                
                 await Task.Delay(EngineTickDelay);
             }
         }
