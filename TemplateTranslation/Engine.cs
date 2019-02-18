@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Engine.Core;
 //?installer.includes
 
-namespace WindowsEngine
+namespace Engine.Core
 {
     /// <summary>
     /// Auto generated class by the installer [DO NOT EDIT]

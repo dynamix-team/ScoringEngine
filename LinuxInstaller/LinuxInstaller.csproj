@@ -30,4 +30,18 @@
 	</Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Testing\install.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo D|xcopy /s /y $(ProjectDir)Templates $(ProjectDir)$(OutDir)Templates" />
+  </Target>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="if $(ConfigurationName) == DebugOffline $(SolutionDir)TemplateTranslation\bin\$(ConfigurationName)\TemplateTranslation.exe /i $(SolutionDir)CPVulnerabilityFramework\debugchecks.xml $(ProjectDir)Testing\install.bin" />
+  </Target>
+
 </Project>

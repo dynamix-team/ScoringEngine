@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="copy /y $(ProjectDir)CheckTemplate.cs $(SolutionDir)CPVulnerabilityFramework\Templates" />
+    <Exec Command="copy /y $(ProjectDir)CheckTemplate.cs $(SolutionDir)CPVulnerabilityFramework\Templates&#xD;&#xA;copy /y $(ProjectDir)CheckTemplate.cs $(SolutionDir)LinuxDebuggingConsole\Templates" />
   </Target>
 
 </Project>

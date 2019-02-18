@@ -160,7 +160,8 @@ namespace Engine.Installer.Core.Templates
                     {
                         args += "@\"" + arguments[i] + "\"" + (i == arguments.Length - 1 ? "" : ", ");
                     }
-                    check.Declarator = "c_" + count + " = new " + check.ClassName + "(" + args + "){ Flags = (byte)" + check.Definition.Flags + " };";
+                    check.Declarator = "c_" + count + " = new " + check.ClassName + "(" + args + "){ Flags = (byte)" + check.Definition.Flags + " }; ";
+                    check.Declarator += "c_" + count + ".CheckFailed = () => { Fail((ushort)" + check.Definition.CheckID + "); }; ";
                     check.InstanceName = "c_" + count;
                     check.StateName = check.InstanceName + "_s";
                     check.Header = "\r\nprivate " + check.ClassName + " c_" + count + "; private uint " + check.StateName + ";\r\n";
@@ -169,7 +170,7 @@ namespace Engine.Installer.Core.Templates
 #if OFFLINE
                     check.Declarator += "Scoring.ScoringItem si_" + count + " = new Scoring.ScoringItem() {" +
                         "ExpectedState = (uint)" + check.Definition.OfflineAnswer + ", " +
-                        "NumPoints = (ushort)" + check.Definition.NumPoints + "}; ";
+                        "NumPoints = (short)" + check.Definition.NumPoints + "}; ";
 
                     check.Declarator += "si_" + count + ".SuccessStatus = () => { return " + check.InstanceName + ".CompletedMessage; }; ";
                     check.Declarator += "si_" + count + ".FailureStatus = () => { return " + check.InstanceName + ".FailedMessage; };";
