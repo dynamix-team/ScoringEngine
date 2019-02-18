@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 
 
-namespace WindowsEngine
+namespace Engine.Core
 {
     /// <summary>
     /// Auto generated class by the installer [DO NOT EDIT]

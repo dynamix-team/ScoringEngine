@@ -1,43 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Engine.Core;
-using System;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
-using System.IO;
-
-
-namespace Engine.Core
-{
-    /// <summary>
-    /// Auto generated class by the installer [DO NOT EDIT]
-    /// </summary>
-#if DEBUG
-    public class Engine : EngineFrame
-#else
-    internal class Engine : EngineFrame
-#endif
-    {
-
-        
-
-#if DEBUG
-        public Engine()
-#else
-        internal Engine()
-#endif
-        {
-            
-        }
-
-        protected override async Task Tick()
-        {
-            
-        }
-
-        //cst
+//cst
+//?using System;
+//?using System.Threading.Tasks;
+//?using System.Security.Cryptography;
+//?using System.IO;
 //NOTE: This file is sourced from ScoringEngine/InstallerCore/CheckTemplate.cs
 //      Changes made outside of the source file will not be applied!
 /// <summary>
@@ -317,8 +282,4 @@ plaintext = srDecrypt.ReadToEnd();
 }
 return plaintext;
 }
-}
-
-
-    }
 }

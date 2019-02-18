@@ -26,5 +26,6 @@ namespace Engine.Installer.Core
         ShareDetectionTemplate = 6,
         OptionalFeaturesTemplate = 7,
         UpdateTemplate = 8,
+        ShareInfoTemplate = 9
     }
 }

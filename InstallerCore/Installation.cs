@@ -216,6 +216,15 @@ namespace Engine.Installer.Core
 
             //Step 5. Copy the required assemblies into the installation directory
 
+            //TODO: make a list of the assemblies to copy
+
+            //Step 6. Post installs for the respective platform
+                //Windows: Register the service, install the driver, copy links, deploy forensics questions
+                //Linux: idk because i need to learn the system better
+
+            //Step 7. Deploy system patching (only if not a debug build)
+
+            //Step 8. Remove any installation artifacts and remove this process
 
             return InstallationResult.Success;
         }
