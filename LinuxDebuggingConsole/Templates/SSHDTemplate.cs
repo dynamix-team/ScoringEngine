@@ -19,7 +19,7 @@ namespace LinuxDebuggingConsole.Templates
         /// <param name="args">[0]:ConfigName,[1]:ExpectedValue</param>
         internal SSHDTemplate(params string[] args)
         {
-
+            
         }
     }
 }

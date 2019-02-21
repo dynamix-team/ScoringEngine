@@ -16,8 +16,8 @@ namespace Engine.Installer.Core
     /// </summary>
     public static class Installation
     {
-        private const string WinEnginePath =    @"C:\Scoring";
-        private const string LinEnginePath =    @"/Scoring";
+        private const string WinEnginePath =    @"C:\Dynamix";
+        private const string LinEnginePath =    @"/Dynamix";
         public const string InstallDir =        @"Installation";
         public const string EnginesrcDir =      @"Engine";
         private const string RepoName =         @"ScoringEngine-master";

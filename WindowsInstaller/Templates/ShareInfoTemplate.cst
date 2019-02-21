@@ -1,0 +1,65 @@
+//cst
+//?using Microsoft.Win32;
+//?using System.Threading.Tasks;
+internal class ShareInfoTemplate : CheckTemplate
+{
+private RegistryKey ShareKey;
+private SafeString[] ValueNames;
+private SafeString KeyName;
+/// <summary>
+///
+/// </summary>
+/// <param name="args">0 = sharename, 1+ = keys</param>
+internal ShareInfoTemplate(params string[] args)
+{
+if (args.Length < 2)
+{
+Enabled = false;
+return;
+}
+try
+{
+ShareKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\LanmanServer\Shares");
+KeyName = args[0];
+int numValues = args.Length - 1;
+ValueNames = new SafeString[numValues];
+for (int i = 0;
+i < numValues;
+i++)
+{
+ValueNames[i] = args[i + 1];
+}
+}
+catch
+{
+Enabled = false;
+}
+}
+internal override async Task<uint> GetCheckValue()
+{
+uint value = 0;
+try
+{
+foreach (string Value in ShareKey?.GetValue(KeyName) as string[] ?? new string[0])
+{
+string[] split = Value.Split('=');
+bool found = false;
+foreach (string s in ValueNames)
+{
+if (s.ToLower().Trim() == split[0].ToLower().Trim())
+{
+found = true;
+}
+}
+if (found)
+{
+value ^= PrepareState(split.Length > 1 ? split[1] : "");
+}
+}
+}
+catch
+{
+}
+return await Task.FromResult<uint>(value);
+}
+}

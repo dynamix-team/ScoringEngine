@@ -122,6 +122,7 @@ namespace Engine.Installer.Core.Templates
         /// <returns></returns>
         private static string BuildEngine(string EngineBase, CheckPreWrapper[] checks)
         {
+            Random r = new Random();
             List<string> Includes = new List<string>();
             int count = 0;
             string engine_classes = "";
@@ -129,6 +130,25 @@ namespace Engine.Installer.Core.Templates
             string engine_init = "";
             string engine_fields = "";
             string engine_tick = "";
+
+            engine_fields += "public override string __PUBLIC => \"";
+            for(int i = 0; i < 16; i++)
+            {
+                switch(r.Next(0,3))
+                {
+                    case 0:
+                        engine_fields += (char)r.Next(48, 58);
+                        break;
+                    case 1:
+                        engine_fields += (char)r.Next(65, 91);
+                        break;
+                    default:
+                        engine_fields += (char)r.Next(97, 123);
+                        break;
+                }
+            }
+            engine_fields += "\";\r\n";
+
             foreach (var check in checks)
             {
                 foreach(string include in check.Template.Includes)
@@ -170,7 +190,9 @@ namespace Engine.Installer.Core.Templates
 #if OFFLINE
                     check.Declarator += "Scoring.ScoringItem si_" + count + " = new Scoring.ScoringItem() {" +
                         "ExpectedState = (uint)" + check.Definition.OfflineAnswer + ", " +
-                        "NumPoints = (short)" + check.Definition.NumPoints + "}; ";
+                        "NumPoints = (short)" + check.Definition.NumPoints + ", " +
+                        "ID = (ushort)" + check.Definition.CheckID +
+                        "}; ";
 
                     check.Declarator += "si_" + count + ".SuccessStatus = () => { return " + check.InstanceName + ".CompletedMessage; }; ";
                     check.Declarator += "si_" + count + ".FailureStatus = () => { return " + check.InstanceName + ".FailedMessage; };";
